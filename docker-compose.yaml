@@ -14,6 +14,7 @@ services:
       - 3000:3000
 
   my-database:
+    platform: linux/x86_64
     image: mysql:latest
     environment:
       MYSQL_DATABASE: 'mydocker02'
