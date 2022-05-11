@@ -13,7 +13,4 @@ export class CreateUserInput {
 
   @Field(() => String)
   phone: string;
-
-  @Field(() => String, { nullable: true, defaultValue: 'SITE' })
-  provider: string;
 }

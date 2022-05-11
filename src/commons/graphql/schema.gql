@@ -14,7 +14,7 @@ type User {
   isAdmin: Boolean!
   provider: String!
   createdAt: DateTime!
-  deletedAt: DateTime!
+  deletedAt: DateTime
 }
 
 """
@@ -59,7 +59,7 @@ type Query {
 }
 
 type Mutation {
-  login: String!
+  login(email: String!, password: String!): String!
   logout: String!
   restoreAccessToken: String!
   createBoard: Board!
@@ -69,8 +69,8 @@ type Mutation {
   updateEnroll: Enroll!
   deleteEnroll: Boolean!
   createUser(createUserInput: CreateUserInput!): User!
-  updateUser(userId: String!, updateUserInput: UpdateUserInput!): User!
-  deleteUser: Boolean!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  deleteUser(userId: String!): Boolean!
 }
 
 input CreateUserInput {
@@ -78,7 +78,6 @@ input CreateUserInput {
   email: String!
   password: String!
   phone: String!
-  provider: String = "SITE"
 }
 
 input UpdateUserInput {
