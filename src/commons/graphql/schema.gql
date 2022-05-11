@@ -1,0 +1,87 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: String!
+  name: String!
+  email: String!
+  phone: String
+  profileImageUrl: String
+  donationAmount: Int!
+  point: Int!
+  serviceTime: Int!
+  isAdmin: Boolean!
+  provider: String!
+  createdAt: DateTime!
+  deletedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Board {
+  id: String!
+  title: String!
+  contents: String!
+  centerName: String!
+  centerOwnerName: String!
+  centerPhone: String!
+  recruitCount: Int!
+  serviceTime: Int!
+  serviceDate: DateTime!
+  address: String!
+  addressDetail: String!
+  location1: String!
+  location2: String!
+  createdAt: DateTime!
+  deletedAt: DateTime!
+}
+
+type Enroll {
+  id: String!
+  userId: String!
+  boardId: String!
+  state: String!
+  createdAt: DateTime!
+  deletedAt: DateTime!
+}
+
+type Query {
+  fetchBoard: Board!
+  fetchBoards: [Board!]!
+  fetchBoardsNearDeadline: [Board!]!
+  fetchEnrollsByBoardId: [Enroll!]!
+  fetchEnrollsByUserId: [Enroll!]!
+  fetchLoginUser: User!
+}
+
+type Mutation {
+  login: String!
+  logout: String!
+  restoreAccessToken: String!
+  createBoard: Board!
+  updatedBoard: Board!
+  deleteBoard: Boolean!
+  createEnroll: Enroll!
+  updateEnroll: Enroll!
+  deleteEnroll: Boolean!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(userId: String!, updateUserInput: UpdateUserInput!): User!
+  deleteUser: Boolean!
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  password: String!
+  phone: String!
+  provider: String = "SITE"
+}
+
+input UpdateUserInput {
+  name: String!
+  password: String!
+}
