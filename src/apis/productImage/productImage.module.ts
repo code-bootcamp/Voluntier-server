@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Product } from '../product/entities/product.entity';
 import { ProductImage } from './entities/productImage.entity';
 import { ProductImageResolver } from './productImage.resolver';
 import { ProductImageService } from './productImage.service';
@@ -8,6 +9,7 @@ import { ProductImageService } from './productImage.service';
   imports: [
     TypeOrmModule.forFeature([
       ProductImage, //
+      Product,
     ]),
   ],
   providers: [ProductImageResolver, ProductImageService],

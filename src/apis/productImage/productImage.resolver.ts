@@ -1,34 +1,43 @@
-import { Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { CreateProductImageInput } from './dto/createProductImage.input';
+import { UpdateProductImageInput } from './dto/updateProductImage.input';
+import { ProductImage } from './entities/productImage.entity';
+import { ProductImageService } from './productImage.service';
 
 @Resolver()
 export class ProductImageResolver {
-  // createProductImage
-  // updateProductImage
-  // deleteProductImage
-  // fetchProductImage
-  // fetchProductImages
-  @Mutation(() => String)
-  createProductImage() {
-    return 'createProductImage';
+  constructor(private readonly productImageService: ProductImageService) {}
+
+  @Mutation(() => ProductImage)
+  createProductImage(
+    @Args('createProductImageInput')
+    createProductImageInput: CreateProductImageInput,
+  ) {
+    return this.productImageService.create({ createProductImageInput });
   }
 
-  @Mutation(() => String)
-  updateProductImage() {
-    return 'updateProductImage';
+  @Mutation(() => [ProductImage])
+  async updateProductImage(
+    @Args('updateProductImageInput')
+    updateProductImageInput: UpdateProductImageInput,
+  ) {
+    return await this.productImageService.update({
+      updateProductImageInput,
+    });
   }
 
-  @Mutation(() => String)
-  deleteProductImage() {
-    return 'deleteProductImage';
+  @Mutation(() => ProductImage)
+  deleteProductImage(@Args('productImageId') productImageId: string) {
+    return this.productImageService.delete({ productImageId });
   }
 
-  @Query(() => String)
-  fetchProductImage() {
-    return 'fetchProductImage';
+  @Query(() => ProductImage)
+  fetchProductImage(@Args('productId') productId: string) {
+    return this.productImageService.findOne({ productId });
   }
 
-  @Query(() => String)
-  fetchProductImages() {
-    return 'fetchProductImages';
+  @Query(() => [ProductImage])
+  fetchProductImages(@Args('productId') productId: string) {
+    return this.productImageService.findAll({ productId });
   }
 }
