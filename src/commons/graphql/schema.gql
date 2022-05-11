@@ -49,12 +49,33 @@ type Enroll {
   deletedAt: DateTime!
 }
 
+type Product {
+  id: String!
+  name: String!
+  price: Int!
+  details: String!
+  createdAt: DateTime!
+}
+
+type ProductImage {
+  id: String!
+  product: Product!
+  imageUrl: String!
+}
+
 type Query {
   fetchBoard: Board!
   fetchBoards: [Board!]!
   fetchBoardsNearDeadline: [Board!]!
+  fetchDonationAmount: String!
+  fetchDonations: String!
   fetchEnrollsByBoardId: [Enroll!]!
   fetchEnrollsByUserId: [Enroll!]!
+  fetchProduct(productId: String!): Product!
+  fetchProducts: [Product!]!
+  fetchProductImage(productId: String!): ProductImage!
+  fetchProductImages(productId: String!): [ProductImage!]!
+  fetchPurchase: String!
   fetchLoginUser: User!
 }
 
@@ -65,12 +86,47 @@ type Mutation {
   createBoard: Board!
   updatedBoard: Board!
   deleteBoard: Boolean!
+  createDonation: String!
   createEnroll: Enroll!
   updateEnroll: Enroll!
   deleteEnroll: Boolean!
+  uploadImage(file: Upload!): String!
+  createProduct(createProductInput: CreateProductInput!): Product!
+  deleteProduct(productId: String!): Boolean!
+  updateProduct(productId: String!, updateProductInput: UpdateProductInput!): Product!
+  createProductImage(createProductImageInput: CreateProductImageInput!): ProductImage!
+  updateProductImage(updateProductImageInput: UpdateProductImageInput!): [ProductImage!]!
+  deleteProductImage(productImageId: String!): ProductImage!
+  createPurchase: String!
+  cancelPurchase: String!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   deleteUser(userId: String!): Boolean!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input CreateProductInput {
+  name: String!
+  price: Int!
+  details: String!
+}
+
+input UpdateProductInput {
+  name: String
+  price: Int
+  details: String
+}
+
+input CreateProductImageInput {
+  productId: String!
+  imageUrl: String!
+}
+
+input UpdateProductImageInput {
+  productId: String!
+  imageUrl: [String!]!
 }
 
 input CreateUserInput {

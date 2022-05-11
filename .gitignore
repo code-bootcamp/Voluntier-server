@@ -37,3 +37,4 @@ lerna-debug.log*
 # added
 .env*
 frontend
+gcp-storage.json

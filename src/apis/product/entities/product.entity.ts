@@ -31,10 +31,9 @@ export class Product {
   createdAt: Date;
 
   @DeleteDateColumn()
-  @Field(() => Date)
   deletedAt: Date;
 
-  @Column()
-  @Field(() => String)
-  imageUrl: string;
+  // @Column()
+  // @Field(() => String)
+  // imageUrl: string;
 }
