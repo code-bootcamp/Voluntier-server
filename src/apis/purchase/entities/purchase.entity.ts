@@ -1,5 +1,14 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Product } from 'src/apis/product/entities/product.entity';
+import { User } from 'src/apis/user/entities/user.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 @ObjectType()
@@ -10,14 +19,14 @@ export class Purchase {
   id: string;
 
   //유저 id
-  @Column()
-  @Field(() => String)
-  userId: string;
+  @ManyToOne(() => User)
+  @Field(() => User)
+  user: User;
 
   //상품 id
-  @Column()
-  @Field(() => String)
-  productId: string;
+  @ManyToOne(() => Product)
+  @Field(() => Product)
+  product: Product;
 
   //수령인
   @Column()
@@ -40,7 +49,7 @@ export class Purchase {
   addressDetail: string;
 
   //송장번호
-  @Column()
+  @Column({ default: null })
   @Field(() => String)
   invoiceNo: string;
 
@@ -53,4 +62,12 @@ export class Purchase {
   @Column()
   @Field(() => Int)
   usedPoint: number;
+
+  @CreateDateColumn()
+  @Field(() => Date)
+  createdAt: Date;
+
+  @DeleteDateColumn()
+  @Field(() => Date)
+  cancelledAt: Date;
 }
