@@ -13,6 +13,11 @@ import {
 } from 'src/commons/auth/gql-auth.guard';
 import * as jwt from 'jsonwebtoken';
 import { CurrentUser, ICurrentUser } from 'src/commons/auth/gql-user.param';
+import {
+  checkValidationPhone,
+  getToken,
+  sendTokenToSMS,
+} from 'src/commons/libraries/phone';
 
 @Resolver()
 export class AuthResolver {
@@ -75,5 +80,58 @@ export class AuthResolver {
     @CurrentUser() currentUser: ICurrentUser, //
   ) {
     return this.authService.getAccessToken({ user: currentUser });
+  }
+
+  @Mutation(() => String)
+  async sendPhoneAuthToken(
+    @Args('phone') phone: string, //
+  ) {
+    const isValid = checkValidationPhone(phone);
+
+    if (isValid) {
+      const token = getToken();
+
+      const existData = await this.authService.fetchPhoneToken({ phone });
+
+      if (existData === undefined) {
+        await this.authService.createPhoneToken({ token, phone });
+      } else {
+        const isAuth = false;
+        await this.authService.updatePhoneToken({ token, phone, isAuth });
+      }
+
+      await sendTokenToSMS(phone, token);
+      return '인증번호 SMS 전송완료!';
+    }
+    throw new UnprocessableEntityException('핸드폰 번호가 올바르지 않습니다.');
+  }
+
+  @Mutation(() => String)
+  async checkPhoneAuthToken(
+    @Args('phone') phone: string, //
+    @Args('token') token: string,
+  ) {
+    const isValid = checkValidationPhone(phone);
+
+    if (isValid) {
+      const existData = await this.authService.fetchPhoneToken({ phone });
+
+      if (existData === undefined) {
+        throw new UnprocessableEntityException(
+          '인증번호가 발급되지 않은 번호입니다.',
+        );
+      } else {
+        if (existData.token !== token) {
+          throw new UnprocessableEntityException(
+            '인증번호가 일치하지 않습니다.',
+          );
+        } else {
+          const isAuth = true;
+          await this.authService.updatePhoneToken({ token, phone, isAuth });
+          return '인증번호 인증 완료되었습니다.';
+        }
+      }
+    }
+    throw new UnprocessableEntityException('핸드폰 번호가 올바르지 않습니다.');
   }
 }
