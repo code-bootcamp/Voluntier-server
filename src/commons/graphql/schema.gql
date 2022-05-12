@@ -40,6 +40,21 @@ type Board {
   deletedAt: DateTime!
 }
 
+type Donation {
+  id: String!
+  user: User!
+  impUid: String!
+  amount: Int!
+  status: POINT_TRANSACTION_STATUS_ENUM!
+  createdAt: DateTime!
+  cancelledAt: DateTime!
+}
+
+enum POINT_TRANSACTION_STATUS_ENUM {
+  PAYMENT
+  CANCEL
+}
+
 type Enroll {
   id: String!
   userId: String!
@@ -67,8 +82,8 @@ type Query {
   fetchBoard: Board!
   fetchBoards: [Board!]!
   fetchBoardsNearDeadline: [Board!]!
-  fetchDonationAmount: String!
-  fetchDonations: String!
+  fetchDonationAmount: Int!
+  fetchDonations: [Donation!]!
   fetchEnrollsByBoardId: [Enroll!]!
   fetchEnrollsByUserId: [Enroll!]!
   fetchProduct(productId: String!): Product!
@@ -88,7 +103,7 @@ type Mutation {
   createBoard: Board!
   updatedBoard: Board!
   deleteBoard: Boolean!
-  createDonation: String!
+  createDonation(impUid: String!, amount: Float!): Donation!
   createEnroll: Enroll!
   updateEnroll: Enroll!
   deleteEnroll: Boolean!

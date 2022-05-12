@@ -15,7 +15,7 @@ export class AuthService {
   setRefreshToken({ user, res }) {
     const refreshToken = this.jwtService.sign(
       { email: user.email, sub: user.id }, //
-      { secret: process.env.JWT_REFRESH_KEY, expiresIn: '5m' },
+      { secret: process.env.JWT_REFRESH_KEY, expiresIn: '6h' },
     );
 
     // 개발환경
@@ -33,7 +33,7 @@ export class AuthService {
   getAccessToken({ user }) {
     return this.jwtService.sign(
       { email: user.email, sub: user.id }, //
-      { secret: process.env.JWT_ACCESS_KEY, expiresIn: '1m' },
+      { secret: process.env.JWT_ACCESS_KEY, expiresIn: '30m' },
     );
   }
 
