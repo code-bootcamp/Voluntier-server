@@ -83,6 +83,8 @@ type Mutation {
   login(email: String!, password: String!): String!
   logout: String!
   restoreAccessToken: String!
+  sendPhoneAuthToken(phone: String!): String!
+  checkPhoneAuthToken(phone: String!, token: String!): String!
   createBoard: Board!
   updatedBoard: Board!
   deleteBoard: Boolean!

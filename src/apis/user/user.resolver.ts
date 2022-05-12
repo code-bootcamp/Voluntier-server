@@ -1,7 +1,8 @@
-import { UseGuards } from '@nestjs/common';
+import { UnprocessableEntityException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { CurrentUser } from 'src/commons/auth/gql-user.param';
+import { AuthService } from '../auth/auth.service';
 import { CreateUserInput } from './dto/createUser.input';
 import { UpdateUserInput } from './dto/updateUser.input';
 import { User } from './entities/user.entity';
@@ -9,7 +10,10 @@ import { UserService } from './user.service';
 
 @Resolver()
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService, //
+    private readonly authService: AuthService,
+  ) {}
 
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => User)
@@ -20,10 +24,18 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  createUser(
+  async createUser(
     @Args('createUserInput') createUserInput: CreateUserInput, //
   ) {
-    return this.userService.create({ createUserInput });
+    const { phone } = createUserInput;
+
+    const existData = await this.authService.fetchPhoneToken({ phone });
+
+    if (existData !== undefined && existData.isAuth) {
+      return await this.userService.create({ createUserInput });
+    } else {
+      throw new UnprocessableEntityException('인증되지 않은 번호입니다.');
+    }
   }
 
   @UseGuards(GqlAuthAccessGuard)

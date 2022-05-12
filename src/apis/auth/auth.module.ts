@@ -5,6 +5,7 @@ import { JwtRefreshStrategy } from 'src/commons/auth/jwt-refresh.strategy';
 import { JwtGoogleStrategy } from 'src/commons/auth/jwt-social-google.strategy';
 import { JwtKakaoStrategy } from 'src/commons/auth/jwt-social-kakao.strategy';
 import { JwtNaverStrategy } from 'src/commons/auth/jwt-social-naver.strategy';
+import { PhoneToken } from '../phoneToken/entities/phoneToken.entity';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { AuthContoller } from './auth.controller';
@@ -14,7 +15,7 @@ import { AuthService } from './auth.service';
 @Module({
   imports: [
     JwtModule.register({}), //
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, PhoneToken]),
   ],
   providers: [
     JwtRefreshStrategy,
