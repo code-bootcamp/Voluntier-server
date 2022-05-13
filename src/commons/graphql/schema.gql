@@ -78,6 +78,21 @@ type ProductImage {
   imageUrl: String!
 }
 
+type Purchase {
+  id: String!
+  user: User!
+  product: Product!
+  recieverName: String!
+  recieverPhone: String!
+  address: String!
+  addressDetail: String!
+  invoiceNo: String!
+  itemCount: Int!
+  usedPoint: Int!
+  createdAt: DateTime!
+  cancelledAt: DateTime!
+}
+
 type Query {
   fetchBoard: Board!
   fetchBoards: [Board!]!
@@ -90,7 +105,7 @@ type Query {
   fetchProducts: [Product!]!
   fetchProductImage(productId: String!): ProductImage!
   fetchProductImages(productId: String!): [ProductImage!]!
-  fetchPurchase: String!
+  fetchPurchases: [Purchase!]!
   fetchLoginUser: User!
 }
 
@@ -114,8 +129,8 @@ type Mutation {
   createProductImage(createProductImageInput: CreateProductImageInput!): ProductImage!
   updateProductImage(updateProductImageInput: UpdateProductImageInput!): [ProductImage!]!
   deleteProductImage(productImageId: String!): ProductImage!
-  createPurchase: String!
-  cancelPurchase: String!
+  createPurchase(createPurchaseInput: CreatePurchaseInput!): Purchase!
+  cancelPurchase(purchaseId: String!): Purchase!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   deleteUser(userId: String!): Boolean!
@@ -144,6 +159,16 @@ input CreateProductImageInput {
 input UpdateProductImageInput {
   productId: String!
   imageUrl: [String!]!
+}
+
+input CreatePurchaseInput {
+  userId: String!
+  productId: String!
+  recieverName: String!
+  recieverPhone: String!
+  address: String!
+  addressDetail: String!
+  itemCount: Int!
 }
 
 input CreateUserInput {
