@@ -16,6 +16,7 @@ async function bootstrap() {
       'X-Requested-With',
       'Content-Type',
       'Accept',
+      'authorization',
     ],
     credentials: true,
   });

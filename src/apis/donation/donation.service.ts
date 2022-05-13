@@ -11,6 +11,7 @@ import {
   Donation,
   POINT_TRANSACTION_STATUS_ENUM,
 } from './entities/donation.entity';
+import axios from 'axios';
 
 // 후원 : 포인트 비율
 const POINT_PERCENTAGE = 0.1;
@@ -29,6 +30,7 @@ export class DonationService {
     private readonly connection: Connection,
   ) {}
   async create({ impUid, amount, currentUser }) {
+    console.log(impUid, amount, currentUser);
     const queryRunner = await this.connection.createQueryRunner();
     await queryRunner.connect();
 
@@ -81,6 +83,98 @@ export class DonationService {
       await queryRunner.rollbackTransaction();
     } finally {
       //연결 해제
+      await queryRunner.release();
+    }
+  }
+
+  async cancel({ impUid, currentUser }) {
+    const queryRunner = await this.connection.createQueryRunner();
+    await queryRunner.connect();
+    //transaction 시작!
+    await queryRunner.startTransaction('SERIALIZABLE');
+    try {
+      const donation = await queryRunner.manager.findOne(
+        Donation,
+        { impUid: impUid },
+        { lock: { mode: 'pessimistic_write' } },
+      );
+
+      //만약 cancelledAt 데이터가 null이 아니라면 이미 취소된 결제, 에러 반환
+      if (donation.cancelledAt)
+        throw new UnprocessableEntityException('이미 취소된 결제입니다.');
+
+      const userInfo = await queryRunner.manager.findOne(
+        User,
+        { id: currentUser.id },
+        { lock: { mode: 'pessimistic_write' } },
+      );
+      console.log(userInfo);
+
+      // 현재 보유한 포인트 확인. 모자랄경우 에러 반환
+      if (userInfo.point < donation.amount * POINT_PERCENTAGE)
+        throw new UnprocessableEntityException('환불할 포인트가 부족합니다.');
+
+      // 인증토큰 받아오기
+      const getToken = await axios({
+        url: 'https://api.iamport.kr/users/getToken',
+        method: 'post', // POST method
+        headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
+        data: {
+          imp_key: process.env.IMPORT_API_KEY, // REST API키
+          imp_secret: process.env.IMPORT_API_SECRET, // REST API Secret
+        },
+      });
+      const { access_token } = getToken.data.response; // 인증토큰
+      console.log(access_token);
+
+      const getCancelData = await axios({
+        url: 'https://api.iamport.kr/payments/cancel',
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: access_token, // 아임포트 서버로부터 발급받은 엑세스 토큰
+        },
+        data: {
+          reasos: '테스트', // 가맹점 클라이언트로부터 받은 환불사유
+          imp_uid: impUid, // imp_uid를 환불 `unique key`로 입력
+          amount: donation.amount, // 가맹점 클라이언트로부터 받은 환불금액
+        },
+      });
+      const { response } = getCancelData.data;
+      if (!response) {
+        throw new UnprocessableEntityException('이미 취소된 결제입니다.');
+      }
+
+      // 기존에 있는 데이터 취소 날짜 적어주기
+      const updatedDonation = this.donationRepository.create({
+        ...donation,
+        cancelledAt: new Date(),
+      });
+      await queryRunner.manager.save(updatedDonation);
+
+      // 새로운 포인트 결제 데이터 추가해주기
+      const newDonation = this.donationRepository.create({
+        impUid: impUid,
+        amount: response.cancel_amount * -1,
+        user: currentUser,
+        status: POINT_TRANSACTION_STATUS_ENUM.PAYMENT,
+      });
+      await queryRunner.manager.save(newDonation);
+
+      //유저의 기부 총액 줄이기
+      const newUser = this.userRepository.create({
+        ...userInfo,
+        donationAmount: userInfo.donationAmount - donation.amount,
+        point: userInfo.point - donation.amount * POINT_PERCENTAGE,
+      });
+      await queryRunner.manager.save(newUser);
+      await queryRunner.commitTransaction();
+
+      return newDonation;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
       await queryRunner.release();
     }
   }

@@ -119,6 +119,7 @@ type Mutation {
   updatedBoard: Board!
   deleteBoard: Boolean!
   createDonation(impUid: String!, amount: Float!): Donation!
+  cancelDonation(impUid: String!): Donation!
   createEnroll: Enroll!
   updateEnroll: Enroll!
   deleteEnroll: Boolean!
