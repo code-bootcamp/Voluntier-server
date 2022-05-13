@@ -21,7 +21,7 @@ export class JwtGoogleStrategy extends PassportStrategy(Strategy, 'google') {
       // 구글에서 넘겨주지 않는 값은 default로 저장
       name: profile.displayName,
       email: profile.emails[0].value,
-      phone: '010-0000-0000',
+      phone: '01000000000',
       password: '1111',
       provider: 'GOOGLE',
     };

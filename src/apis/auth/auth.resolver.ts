@@ -3,6 +3,8 @@ import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import * as bcrypt from 'bcrypt';
 import {
+  CACHE_MANAGER,
+  Inject,
   UnauthorizedException,
   UnprocessableEntityException,
   UseGuards,
@@ -18,12 +20,16 @@ import {
   getToken,
   sendTokenToSMS,
 } from 'src/commons/libraries/phone';
+import { Cache } from 'cache-manager';
 
 @Resolver()
 export class AuthResolver {
   constructor(
     private readonly userService: UserService, //
     private readonly authService: AuthService,
+
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache,
   ) {}
 
   @Mutation(() => String)
@@ -55,7 +61,7 @@ export class AuthResolver {
 
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => String)
-  logout(
+  async logout(
     @Context() context: any, //
   ) {
     const accessToken = context.req.headers.authorization.split(' ')[1];
@@ -65,8 +71,23 @@ export class AuthResolver {
     );
 
     try {
-      const verifyAccess = jwt.verify(accessToken, 'myAccessKey');
-      const verifyRefresh = jwt.verify(refreshToken, 'myRefreshKey');
+      const verifyAccess = jwt.verify(accessToken, process.env.JWT_ACCESS_KEY);
+      const verifyRefresh = jwt.verify(
+        refreshToken,
+        process.env.JWT_REFRESH_KEY,
+      );
+
+      await this.cacheManager.set(`accessToken:${accessToken}`, 'accessToken', {
+        ttl: verifyAccess['exp'] - verifyAccess['iat'],
+      });
+
+      await this.cacheManager.set(
+        `refreshToken:${refreshToken}`,
+        'refreshToken',
+        {
+          ttl: verifyRefresh['exp'] - verifyRefresh['iat'],
+        },
+      );
     } catch (error) {
       throw new UnauthorizedException('검증되지 않은 토큰입니다!');
     }
