@@ -24,6 +24,18 @@ export class DonationResolver {
     });
   }
 
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => Donation)
+  async cancelDonation(
+    @Args('impUid') impUid: string,
+    @CurrentUser() currentUser: ICurrentUser,
+  ) {
+    return this.donationService.cancel({
+      impUid,
+      currentUser,
+    });
+  }
+
   // fetchDonationAmount
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => Int)
