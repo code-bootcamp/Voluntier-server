@@ -57,7 +57,7 @@ export class AuthContoller {
       const createUserInput = {
         name: req.user.name,
         email: req.user.email,
-        phone: req.user.phone,
+        phone: req.user.phone.replace(/[^0-9]/g, ''),
         password: req.user.password,
         provider: req.user.provider,
       };

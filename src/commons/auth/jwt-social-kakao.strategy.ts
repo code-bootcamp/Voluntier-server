@@ -22,7 +22,7 @@ export class JwtKakaoStrategy extends PassportStrategy(KakaoStrategy, 'kakao') {
       email: !profile._json.kakao_account.email
         ? 'defaultEmail'
         : profile._json.kakao_account.email,
-      phone: !profile.mobile ? '010-0000-0000' : profile.mobile,
+      phone: !profile.mobile ? '01000000000' : profile.mobile,
       password: '1111',
       provider: 'KAKAO',
     };

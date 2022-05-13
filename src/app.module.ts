@@ -34,7 +34,7 @@ import * as redisStore from 'cache-manager-redis-store';
       context: ({ req, res }) => ({ req, res }),
       cors: {
         origin: process.env.FRONTEND_URL,
-        credentials: true,
+        Credential: true,
       },
     }),
     TypeOrmModule.forRoot({

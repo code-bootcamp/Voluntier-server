@@ -15,7 +15,7 @@ export class AuthService {
   setRefreshToken({ user, res }) {
     const refreshToken = this.jwtService.sign(
       { email: user.email, sub: user.id }, //
-      { secret: process.env.JWT_REFRESH_KEY, expiresIn: '6h' },
+      { secret: process.env.JWT_REFRESH_KEY, expiresIn: '3m' },
     );
 
     // 개발환경
@@ -23,17 +23,16 @@ export class AuthService {
 
     // 배포환경
     res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader(
       'Set-Cookie',
-      `refreshToken=${refreshToken}; path=/; domain=${process.env.FRONTEND_DOMAIN}; SameSite=None; Secure; httpOnly;`,
+      `refreshToken=${refreshToken}; path=/; domain=${process.env.BACKEND_DOMAIN}; SameSite=None; Secure; httpOnly;`,
     );
   }
 
   getAccessToken({ user }) {
     return this.jwtService.sign(
       { email: user.email, sub: user.id }, //
-      { secret: process.env.JWT_ACCESS_KEY, expiresIn: '30m' },
+      { secret: process.env.JWT_ACCESS_KEY, expiresIn: '1m' },
     );
   }
 

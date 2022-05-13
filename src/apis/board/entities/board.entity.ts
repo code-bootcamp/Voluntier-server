@@ -1,9 +1,11 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { User } from 'src/apis/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -13,6 +15,10 @@ export class Board {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => String)
   id: string;
+
+  @ManyToOne(() => User)
+  @Field(() => User)
+  user: User;
 
   @Column()
   @Field(() => String)
