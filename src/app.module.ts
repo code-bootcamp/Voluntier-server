@@ -1,5 +1,5 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -14,6 +14,8 @@ import { PurchaseModule } from './apis/purchase/purchase.module';
 import { UserModule } from './apis/user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import type { RedisClientOptions } from 'redis';
+import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
@@ -31,22 +33,27 @@ import { AppService } from './app.service';
       autoSchemaFile: 'src/commons/graphql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
       cors: {
-        origin: 'process.env.FRONTEND_URL',
+        origin: process.env.FRONTEND_URL,
         credentials: true,
       },
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'my-database', // (1) Local: 'my-database' , (2) Cloud: 'database.voluntier.site'
+      host: process.env.DATABASE_HOST, // (1) Local: 'my-database' , (2) Cloud: 'database.voluntier.site'
       port: 3306,
       username: 'root',
       password: 'root',
-      database: 'mydocker02', // (1) Local: 'mydocker02' , (2) Cloud: 'voluntier'
+      database: process.env.DATABASE, // (1) Local: 'mydocker02' , (2) Cloud: 'voluntier'
       entities: [__dirname + '/apis/**/*.entity.*'],
       synchronize: true,
       logging: true,
     }),
     ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    CacheModule.register<RedisClientOptions>({
+      store: redisStore,
+      url: process.env.REDIS_URL,
       isGlobal: true,
     }),
   ],
