@@ -68,6 +68,6 @@ export class AuthContoller {
     // 3. 로그인
     this.authService.setRefreshToken({ user, res });
 
-    res.redirect('http://localhost:5500/frontend/login/index.html');
+    res.redirect(process.env.SOCIAL_REDIRECT_URL);
   }
 }
