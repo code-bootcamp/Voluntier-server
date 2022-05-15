@@ -24,8 +24,6 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
   async validate(req, payload) {
     const accessToken = req.headers.authorization.split(' ')[1];
 
-    console.log('payload:', payload);
-
     const accessExist = await this.cacheManager.get(
       `accessToken:${accessToken}`,
     );

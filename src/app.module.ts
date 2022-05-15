@@ -33,7 +33,7 @@ import * as redisStore from 'cache-manager-redis-store';
       autoSchemaFile: 'src/commons/graphql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
       cors: {
-        origin: process.env.FRONTEND_URL,
+        origin: process.env.FRONTEND_URLS.split(','),
         Credential: true,
       },
     }),

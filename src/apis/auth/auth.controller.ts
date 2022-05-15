@@ -66,7 +66,7 @@ export class AuthContoller {
     }
 
     // 3. 로그인
-    this.authService.setRefreshToken({ user, res });
+    this.authService.setRefreshToken({ user, req, res });
 
     res.redirect(process.env.SOCIAL_REDIRECT_URL);
   }
