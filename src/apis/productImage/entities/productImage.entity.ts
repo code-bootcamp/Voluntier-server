@@ -2,7 +2,6 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Product } from 'src/apis/product/entities/product.entity';
 import {
   Column,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -24,7 +23,4 @@ export class ProductImage {
   @Column()
   @Field(() => String)
   imageUrl: string;
-
-  @DeleteDateColumn()
-  deletedAt: Date;
 }

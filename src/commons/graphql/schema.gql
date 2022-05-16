@@ -84,8 +84,8 @@ type Purchase {
   id: String!
   user: User!
   product: Product!
-  recieverName: String!
-  recieverPhone: String!
+  receiverName: String!
+  receiverPhone: String!
   address: String!
   addressDetail: String!
   invoiceNo: String!
