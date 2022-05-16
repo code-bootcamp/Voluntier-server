@@ -24,6 +24,7 @@ scalar DateTime
 
 type Board {
   id: String!
+  user: User!
   title: String!
   contents: String!
   centerName: String!

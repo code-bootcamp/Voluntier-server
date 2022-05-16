@@ -13,17 +13,17 @@ export class JwtKakaoStrategy extends PassportStrategy(KakaoStrategy, 'kakao') {
     });
   }
 
-  validate(accessToken: string, refreshToken: string, profile: any, done: any) {
-    console.log('KAKAO:', profile);
-
+  validate(accessToken: string, refreshToken: string, profile: any) {
     return {
       // 카카오에서 넘겨주지 않는 값은 default로 저장
-      name: !profile.displayName ? 'default' : profile.displayName,
+      name: !profile.displayName
+        ? process.env.DEFAULT_NAME
+        : profile.displayName,
       email: !profile._json.kakao_account.email
-        ? 'defaultEmail'
+        ? process.env.DEFAULT_EMAIL
         : profile._json.kakao_account.email,
-      phone: !profile.mobile ? '01000000000' : profile.mobile,
-      password: '1111',
+      phone: !profile.mobile ? process.env.DEFAULT_PHONE : profile.mobile,
+      password: process.env.DEFAULT_PASSWORD,
       provider: 'KAKAO',
     };
   }

@@ -16,20 +16,13 @@ export class JwtNaverStrategy extends PassportStrategy(NaverStrategy, 'naver') {
     });
   }
 
-  validate(
-    accessToken: string,
-    refreshToken: string,
-    profile: NaverProfile,
-    done: any,
-  ) {
-    console.log('NAVER:', profile);
-
+  validate(accessToken: string, refreshToken: string, profile: NaverProfile) {
     return {
       // 네이버에서 넘겨주지 않는 값은 default로 저장
-      name: !profile.name ? 'default' : profile.name,
-      email: !profile.email ? 'defaultEmail' : profile.email,
-      phone: !profile.mobile ? '01000000000' : profile.mobile,
-      password: '1111',
+      name: !profile.name ? process.env.DEFAULT_NAME : profile.name,
+      email: !profile.email ? process.env.DEFAULT_EMAIL : profile.email,
+      phone: !profile.mobile ? process.env.DEFAULT_PHONE : profile.mobile,
+      password: process.env.DEFAULT_PASSWORD,
       provider: 'NAVER',
     };
   }

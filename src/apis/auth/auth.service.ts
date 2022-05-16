@@ -12,7 +12,7 @@ export class AuthService {
     private readonly phoneTokenRepository: Repository<PhoneToken>,
   ) {}
 
-  setRefreshToken({ user, res }) {
+  setRefreshToken({ user, req, res }) {
     const refreshToken = this.jwtService.sign(
       { email: user.email, sub: user.id }, //
       { secret: process.env.JWT_REFRESH_KEY, expiresIn: '3m' },
@@ -22,7 +22,13 @@ export class AuthService {
     // res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; path=/;`);
 
     // 배포환경
-    res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
+    const allowedOrigins = process.env.FRONTEND_URLS.split(',');
+    const origin = req.headers.origin;
+
+    if (allowedOrigins.indexOf(origin) > -1) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+
     res.setHeader(
       'Set-Cookie',
       `refreshToken=${refreshToken}; path=/; domain=${process.env.BACKEND_DOMAIN}; SameSite=None; Secure; httpOnly;`,

@@ -53,7 +53,11 @@ export class AuthResolver {
       throw new UnprocessableEntityException('암호가 틀렸습니다!');
 
     // 4. refreshToken(=JWT)을 만들어서 프론트엔드(쿠키)에 보내주기
-    this.authService.setRefreshToken({ user, res: context.res });
+    this.authService.setRefreshToken({
+      user,
+      req: context.req,
+      res: context.res,
+    });
 
     // 5. accessToken(=JWT) 만들어서 프론트엔드에 보내주기
     return this.authService.getAccessToken({ user });
