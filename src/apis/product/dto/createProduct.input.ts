@@ -10,4 +10,7 @@ export class CreateProductInput {
 
   @Field(() => String)
   details: string;
+
+  @Field(() => [String])
+  imageUrls: string[];
 }

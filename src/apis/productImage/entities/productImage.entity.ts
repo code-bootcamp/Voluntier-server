@@ -4,6 +4,7 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -15,7 +16,8 @@ export class ProductImage {
   @Field(() => String)
   id: string;
 
-  @ManyToOne(() => Product)
+  @ManyToOne(() => Product, (product) => product.productImage)
+  @JoinColumn()
   @Field(() => Product)
   product: Product;
 

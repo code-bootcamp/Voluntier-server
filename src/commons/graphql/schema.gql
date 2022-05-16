@@ -24,6 +24,7 @@ scalar DateTime
 
 type Board {
   id: String!
+  user: User!
   title: String!
   contents: String!
   centerName: String!
@@ -70,6 +71,7 @@ type Product {
   price: Int!
   details: String!
   createdAt: DateTime!
+  productImage: [ProductImage!]!
 }
 
 type ProductImage {
@@ -144,12 +146,14 @@ input CreateProductInput {
   name: String!
   price: Int!
   details: String!
+  imageUrls: [String!]!
 }
 
 input UpdateProductInput {
   name: String
   price: Int
   details: String
+  imageUrls: [String!]
 }
 
 input CreateProductImageInput {
