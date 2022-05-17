@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class CreateBoardInput {
@@ -17,10 +17,10 @@ export class CreateBoardInput {
   @Field(() => String)
   centerPhone: string;
 
-  @Field(() => String)
+  @Field(() => Int)
   recruitCount: number;
 
-  @Field(() => String)
+  @Field(() => Int)
   serviceTime: number;
 
   @Field(() => Date)
@@ -37,4 +37,7 @@ export class CreateBoardInput {
 
   @Field(() => String)
   location2: string;
+
+  @Field(() => [String])
+  urls: string[];
 }

@@ -37,8 +37,15 @@ type Board {
   addressDetail: String!
   location1: String!
   location2: String!
+  boardImage: [BoardImage!]
   createdAt: DateTime!
-  deletedAt: DateTime!
+  deletedAt: DateTime
+}
+
+type BoardImage {
+  id: String!
+  board: Board!
+  imageUrl: String!
 }
 
 type Donation {
@@ -58,11 +65,16 @@ enum POINT_TRANSACTION_STATUS_ENUM {
 
 type Enroll {
   id: String!
-  userId: String!
-  boardId: String!
-  state: String!
+  user: User!
+  board: Board!
+  status: ENROLL_STATUS_ENUM!
   createdAt: DateTime!
   deletedAt: DateTime!
+}
+
+enum ENROLL_STATUS_ENUM {
+  ENROLL
+  COMPLETE
 }
 
 type Product {
@@ -96,12 +108,12 @@ type Purchase {
 }
 
 type Query {
-  fetchBoard: Board!
-  fetchBoards: [Board!]!
-  fetchBoardsNearDeadline: [Board!]!
+  fetchBoard(boardId: String!): Board!
+  fetchBoards(search: String, location1: String, location2: String, page: Int!): [Board!]!
+  fetchBoardsNearDeadline(location1: String, location2: String): [Board!]!
   fetchDonationAmount: Int!
   fetchDonations: [Donation!]!
-  fetchEnrollsByBoardId: [Enroll!]!
+  fetchEnrollsByBoardId(boardId: String!): [Enroll!]!
   fetchEnrollsByUserId: [Enroll!]!
   fetchProduct(productId: String!): Product!
   fetchProducts: [Product!]!
@@ -117,14 +129,14 @@ type Mutation {
   restoreAccessToken: String!
   sendPhoneAuthToken(phone: String!): String!
   checkPhoneAuthToken(phone: String!, token: String!): String!
-  createBoard: Board!
-  updatedBoard: Board!
-  deleteBoard: Boolean!
+  createBoard(createBoardInput: CreateBoardInput!): Board!
+  updateBoard(boardId: String!, updateBoardInput: UpdateBoardInput!): Board!
+  deleteBoard(boardId: String!): Boolean!
   createDonation(impUid: String!, amount: Float!): Donation!
   cancelDonation(impUid: String!): Donation!
-  createEnroll: Enroll!
-  updateEnroll: Enroll!
-  deleteEnroll: Boolean!
+  createEnroll(boardId: String!): Enroll!
+  updateEnroll(boardId: String!, enrollId: String!): Enroll!
+  deleteEnroll(boardId: String!, enrollId: String!): Boolean!
   uploadImage(file: Upload!): String!
   createProduct(createProductInput: CreateProductInput!): Product!
   deleteProduct(productId: String!): Boolean!
@@ -137,6 +149,38 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   deleteUser(userId: String!): Boolean!
+}
+
+input CreateBoardInput {
+  title: String!
+  contents: String!
+  centerName: String!
+  centerOwnerName: String!
+  centerPhone: String!
+  recruitCount: Int!
+  serviceTime: Int!
+  serviceDate: DateTime!
+  address: String!
+  addressDetail: String!
+  location1: String!
+  location2: String!
+  urls: [String!]!
+}
+
+input UpdateBoardInput {
+  title: String
+  contents: String
+  centerName: String
+  centerOwnerName: String
+  centerPhone: String
+  recruitCount: Int
+  serviceTime: Int
+  serviceDate: DateTime
+  address: String
+  addressDetail: String
+  location1: String
+  location2: String
+  urls: [String!]
 }
 
 """The `Upload` scalar type represents a file upload."""
