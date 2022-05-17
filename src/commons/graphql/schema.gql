@@ -71,6 +71,7 @@ type Product {
   price: Int!
   details: String!
   createdAt: DateTime!
+  productImage: [ProductImage!]!
 }
 
 type ProductImage {
@@ -83,8 +84,8 @@ type Purchase {
   id: String!
   user: User!
   product: Product!
-  recieverName: String!
-  recieverPhone: String!
+  receiverName: String!
+  receiverPhone: String!
   address: String!
   addressDetail: String!
   invoiceNo: String!
@@ -145,12 +146,14 @@ input CreateProductInput {
   name: String!
   price: Int!
   details: String!
+  imageUrls: [String!]!
 }
 
 input UpdateProductInput {
   name: String
   price: Int
   details: String
+  imageUrls: [String!]
 }
 
 input CreateProductImageInput {

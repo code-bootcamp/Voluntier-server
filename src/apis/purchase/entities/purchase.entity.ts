@@ -31,12 +31,12 @@ export class Purchase {
   //수령인
   @Column()
   @Field(() => String)
-  recieverName: string;
+  receiverName: string;
 
   //수령인 전화번호
   @Column()
   @Field(() => String)
-  recieverPhone: string;
+  receiverPhone: string;
 
   //배송주소
   @Column()
