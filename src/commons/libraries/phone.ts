@@ -15,7 +15,6 @@ export function getToken() {
     myCount,
     '0',
   );
-  // console.log(result);
   return result;
 }
 
