@@ -9,6 +9,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -77,6 +78,10 @@ export class Board {
   @CreateDateColumn()
   @Field(() => Date)
   createdAt: Date;
+
+  @UpdateDateColumn()
+  @Field(() => Date, { nullable: true })
+  updatedAt: Date;
 
   @DeleteDateColumn()
   @Field(() => Date, { nullable: true })

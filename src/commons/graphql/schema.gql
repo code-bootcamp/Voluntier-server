@@ -39,6 +39,7 @@ type Board {
   location2: String!
   boardImage: [BoardImage!]
   createdAt: DateTime!
+  updatedAt: DateTime
   deletedAt: DateTime
 }
 
@@ -117,9 +118,10 @@ type ChatHistory {
 
 type Query {
   fetchBoard(boardId: String!): Board!
-  fetchBoards(search: String, location1: String, location2: String, page: Int!): [Board!]!
+  fetchBoards(search: String, location1: String, location2: String, page: Int): [Board!]!
   fetchBoardsAll: [Board!]!
   fetchBoardsNearDeadline(location1: String, location2: String): [Board!]!
+  fetchBoardsCount(search: String, location1: String, location2: String): Int!
   fetchChatHistory(boardId: String!): [ChatHistory!]!
   fetchDonationAmount: Int!
   fetchDonations: [Donation!]!
