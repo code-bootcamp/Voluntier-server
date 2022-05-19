@@ -8,7 +8,7 @@ import { JwtNaverStrategy } from 'src/commons/auth/jwt-social-naver.strategy';
 import { PhoneToken } from '../phoneToken/entities/phoneToken.entity';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
-import { AuthContoller } from './auth.controller';
+import { AuthController } from './auth.controller';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 
@@ -27,7 +27,7 @@ import { AuthService } from './auth.service';
     UserService,
   ],
   controllers: [
-    AuthContoller, //
+    AuthController, //
   ],
 })
 export class AuthModule {}

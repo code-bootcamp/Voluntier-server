@@ -16,6 +16,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import type { RedisClientOptions } from 'redis';
 import * as redisStore from 'cache-manager-redis-store';
+import { CaptchaModule } from './apis/captcha/captcha.module';
 import { ChatHistoryModule } from './apis/chatHistory/chatHistory.module';
 import { ChatModule } from './gateways/chat/chat.module';
 
@@ -23,6 +24,7 @@ import { ChatModule } from './gateways/chat/chat.module';
   imports: [
     AuthModule, //
     BoardModule,
+    CaptchaModule,
     ChatHistoryModule,
     ChatModule,
     DonationModule,

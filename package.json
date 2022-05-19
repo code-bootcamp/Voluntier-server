@@ -36,6 +36,7 @@
     "@nestjs/typeorm": "^8.0.3",
     "@nestjs/websockets": "^8.4.5",
     "@types/cookie-parser": "^1.4.3",
+    "@types/request": "^2.48.8",
     "@types/socket.io": "2.1.13",
     "apollo-server-express": "^3.6.7",
     "bcrypt": "^5.0.1",
@@ -54,6 +55,7 @@
     "passport-naver-v2": "^2.0.8",
     "redis": "^4.1.0",
     "reflect-metadata": "^0.1.13",
+    "request": "^2.88.2",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "typeorm": "0.2"
