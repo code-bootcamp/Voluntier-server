@@ -25,7 +25,7 @@ export class Product {
   @Field(() => Int)
   price: number;
 
-  @Column()
+  @Column('text')
   @Field(() => String)
   details: string;
 
