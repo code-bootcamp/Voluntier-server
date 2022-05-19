@@ -1,9 +1,10 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Like, Repository } from 'typeorm';
+import { FindManyOptions, getRepository, Like, Repository } from 'typeorm';
 import { BoardImage } from '../boardImage/entities/boardImage.entity';
 import { User } from '../user/entities/user.entity';
 import { Board } from './entities/board.entity';
+// import * as moment from 'moment-timezone';
 
 @Injectable()
 export class BoardService {
@@ -17,10 +18,12 @@ export class BoardService {
   ) {}
 
   async findOne({ boardId }) {
-    return await this.boardRepository.findOne({
+    const result = await this.boardRepository.findOne({
       where: { id: boardId },
       relations: ['user', 'boardImage'],
     });
+
+    return result;
   }
 
   async findAll({ search, location1, location2, page }) {
@@ -48,6 +51,20 @@ export class BoardService {
     options['where'] = whereOptions;
 
     return await this.boardRepository.find(options);
+  }
+
+  async findAllBeforeEnd() {
+    //const now = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss Z'); // 한국 기준 시간
+    const now = new Date();
+    now.setHours(now.getHours() + 9);
+
+    const result = await getRepository(Board)
+      .createQueryBuilder('b')
+      .where('b.serviceDate > :now', { now: now })
+      .orderBy('b.createdAt', 'DESC')
+      .getMany();
+
+    return result;
   }
 
   async findAllNearDeadline({ location1, location2 }) {
@@ -83,21 +100,23 @@ export class BoardService {
 
     const { urls } = createBoardInput;
 
-    await this.boardImageRepository.delete({
-      board: {
-        id: board.id,
-      },
-    });
-
-    for (let i = 0; i < urls.length; i++) {
-      const url = urls[i];
-
-      await this.boardImageRepository.save({
-        imageUrl: url,
+    if (urls !== undefined) {
+      await this.boardImageRepository.delete({
         board: {
           id: board.id,
         },
       });
+
+      for (let i = 0; i < urls.length; i++) {
+        const url = urls[i];
+
+        await this.boardImageRepository.save({
+          imageUrl: url,
+          board: {
+            id: board.id,
+          },
+        });
+      }
     }
 
     return board;

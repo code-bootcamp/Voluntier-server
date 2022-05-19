@@ -26,7 +26,7 @@ export class Board {
   @Field(() => String)
   title: string;
 
-  @Column()
+  @Column('text')
   @Field(() => String)
   contents: string;
 
@@ -42,7 +42,7 @@ export class Board {
   @Field(() => String)
   centerPhone: string;
 
-  @Column()
+  @Column({ default: 0 })
   @Field(() => Int)
   recruitCount: number;
 

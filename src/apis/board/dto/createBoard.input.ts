@@ -17,7 +17,7 @@ export class CreateBoardInput {
   @Field(() => String)
   centerPhone: string;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   recruitCount: number;
 
   @Field(() => Int)
@@ -38,6 +38,6 @@ export class CreateBoardInput {
   @Field(() => String)
   location2: string;
 
-  @Field(() => [String])
+  @Field(() => [String], { nullable: true })
   urls: string[];
 }

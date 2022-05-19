@@ -68,7 +68,8 @@ export class BoardResolver {
         searchCache[i]['serviceDate'] = new Date(searchCache[i]['serviceDate']);
         searchCache[i]['createdAt'] = new Date(searchCache[i]['createdAt']);
       }
-      console.log('🔴 On Redis:', searchCache);
+      // console.log('🔴 On Redis:', searchCache);
+      console.log('🔴 On Redis: Data Exist');
       return searchCache;
     }
 
@@ -112,13 +113,17 @@ export class BoardResolver {
         from: (page - 1) * 10,
       });
 
-      console.log('🟢 On Elastic Search:', JSON.stringify(boards, null, '  '));
+      // console.log('🟢 On Elastic Search:', JSON.stringify(boards, null, '  '));
 
       for (let i = 0; i < boards.hits.hits.length; i++) {
         const board = boards.hits.hits[i]._source;
 
         const createBoard = {
           id: board.id,
+          user: {
+            id: board.userid,
+            name: board.username,
+          },
           title: board.title,
           contents: board.contents,
           centerName: board.centername,
@@ -126,12 +131,12 @@ export class BoardResolver {
           centerPhone: board.centerphone,
           recruitCount: board.recruitcount,
           serviceTime: board.servicetime,
-          serviceDate: new Date(board.servicedate * 1000),
+          serviceDate: new Date(board.servicedate * 1000 + 9 * 60 * 60 * 1000),
           address: board.address,
           addressDetail: board.addressdetail,
           location1: board.location1,
           location2: board.location2,
-          createdAt: new Date(board.createdat * 1000),
+          createdAt: new Date(board.createdat * 1000 + 9 * 60 * 60 * 1000),
         };
 
         resultBoards.push(createBoard);
@@ -145,6 +150,11 @@ export class BoardResolver {
       // 5. 조회 결과 반환
       return resultBoards;
     }
+  }
+
+  @Query(() => [Board])
+  async fetchBoardsAll() {
+    return await this.boardService.findAllBeforeEnd();
   }
 
   @Query(() => [Board])
