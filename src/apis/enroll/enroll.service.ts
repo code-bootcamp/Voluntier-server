@@ -23,6 +23,7 @@ export class EnrollService {
           id: boardId,
         },
       },
+      relations: ['user'],
     });
   }
 

@@ -33,7 +33,7 @@ export class BoardResolver {
     @Args('search', { nullable: true }) search: string, //
     @Args('location1', { nullable: true }) location1: string,
     @Args('location2', { nullable: true }) location2: string,
-    @Args('page', { type: () => Int }) page: number,
+    @Args('page', { type: () => Int, nullable: true }) page: number,
   ) {
     // 0. Redis, ElasticSearch 적용 전 MySQL 조회
     // return await this.boardService.findAll({
@@ -58,6 +58,10 @@ export class BoardResolver {
     if (location2 !== undefined) {
       searchKey += `:${location2}`;
     }
+    if (page === undefined) {
+      page = 1;
+    }
+
     searchKey += `:${page}`;
 
     const searchCache = await this.cacheManager.get(searchKey);
@@ -67,8 +71,12 @@ export class BoardResolver {
       for (let i = 0; i < searchCache.length; i++) {
         searchCache[i]['serviceDate'] = new Date(searchCache[i]['serviceDate']);
         searchCache[i]['createdAt'] = new Date(searchCache[i]['createdAt']);
+        searchCache[i]['updatedAt'] = new Date(searchCache[i]['updatedAt']);
+        searchCache[i]['deletedAt'] =
+          searchCache[i]['deletedAt'] === null
+            ? null
+            : new Date(searchCache[i]['deletedAt']);
       }
-      // console.log('🔴 On Redis:', searchCache);
       console.log('🔴 On Redis: Data Exist');
       return searchCache;
     }
@@ -106,14 +114,17 @@ export class BoardResolver {
         query: {
           bool: {
             must: elasticQuery,
+            must_not: {
+              exists: {
+                field: 'deletedat',
+              },
+            },
           },
         },
         sort: 'createdat2:desc',
         size: 10,
         from: (page - 1) * 10,
       });
-
-      // console.log('🟢 On Elastic Search:', JSON.stringify(boards, null, '  '));
 
       for (let i = 0; i < boards.hits.hits.length; i++) {
         const board = boards.hits.hits[i]._source;
@@ -137,6 +148,11 @@ export class BoardResolver {
           location1: board.location1,
           location2: board.location2,
           createdAt: new Date(board.createdat * 1000 + 9 * 60 * 60 * 1000),
+          updatedAt: new Date(board.updatedat * 1000 + 9 * 60 * 60 * 1000),
+          deletedAt:
+            board.delatedat === undefined
+              ? null
+              : new Date(board.deletedat * 1000 + 9 * 60 * 60 * 1000),
         };
 
         resultBoards.push(createBoard);
@@ -166,6 +182,53 @@ export class BoardResolver {
       location1,
       location2,
     });
+  }
+
+  @Query(() => Int)
+  async fetchBoardsCount(
+    @Args('search', { nullable: true }) search: string, //
+    @Args('location1', { nullable: true }) location1: string,
+    @Args('location2', { nullable: true }) location2: string,
+  ) {
+    const elasticQuery = [];
+
+    if (search !== undefined) {
+      elasticQuery.push({
+        term: {
+          title: search,
+        },
+      });
+    }
+    if (location1 !== undefined) {
+      elasticQuery.push({
+        term: {
+          location1: location1,
+        },
+      });
+    }
+    if (location2 !== undefined) {
+      elasticQuery.push({
+        term: {
+          location2: location2,
+        },
+      });
+    }
+
+    const boards = await this.elasticsearchService.count({
+      index: 'board',
+      query: {
+        bool: {
+          must: elasticQuery,
+          must_not: {
+            exists: {
+              field: 'deletedat',
+            },
+          },
+        },
+      },
+    });
+
+    return boards.count;
   }
 
   @UseGuards(GqlAuthAccessGuard)
