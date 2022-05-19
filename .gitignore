@@ -38,3 +38,4 @@ lerna-debug.log*
 .env*
 frontend
 gcp-storage.json
+index.html

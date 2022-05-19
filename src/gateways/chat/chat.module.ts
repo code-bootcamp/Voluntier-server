@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChatHistory } from 'src/apis/chatHistory/entities/chatHistory.entity';
-import { ChatGateway } from './chat.gatewy';
+import { ChatGateway } from './chat.gateway';
 import { ChatSerivce } from './chat.service';
 
 @Module({
