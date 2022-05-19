@@ -107,10 +107,19 @@ type Purchase {
   cancelledAt: DateTime!
 }
 
+type ChatHistory {
+  id: String!
+  user: User!
+  message: String!
+  createdAt: DateTime!
+  board: Board!
+}
+
 type Query {
   fetchBoard(boardId: String!): Board!
   fetchBoards(search: String, location1: String, location2: String, page: Int!): [Board!]!
   fetchBoardsNearDeadline(location1: String, location2: String): [Board!]!
+  fetchChatHistory(boardId: String!): [ChatHistory!]!
   fetchDonationAmount: Int!
   fetchDonations: [Donation!]!
   fetchEnrollsByBoardId(boardId: String!): [Enroll!]!

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>시크릿 채팅방</title>
+    <!-- jQuery -->
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.js"
+      integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+      crossorigin="anonymous"
+    ></script>
+    <!-- socket.io -->
+    <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+
+    <script>
+      const socket = io('ws://localhost:8080/chat');
+      const nickname = prompt('닉네임을 알려주세요.');
+      if (!nickname) {
+        window.location.reload();
+      }
+      const room = prompt('입장할 방의 코드를 적어주세요.');
+      if (!room) {
+        window.location.reload();
+      }
+      socket.emit('joinRoom', nickname, room);
+
+      socket.on('connect', () => {
+        /* 누군가 채팅침 */
+        socket.on(room, (data) => {
+          $('#chatList').append(`<div>${data[0]} : ${data[1]}</div>`);
+        });
+        /* 누군가 입장 */
+        socket.on('comeOn' + room, (comeOn) => {
+          $('#chatList').append(`<div style="color:blue;">${comeOn}</div>`);
+        });
+
+        socket.on('test', (data) => {
+          console.log(data);
+        });
+      });
+
+      function msg_send() {
+        /* 메시지 전송 */
+        let message = $('#msg').val();
+        socket.emit('send', room, nickname, message);
+        $('#msg').val('');
+        $('#chatList').append(`<div style="color:red;">나 : ${message}</div>`);
+      }
+
+      $(document).ready(() => {
+        $('#room').text(`${room}`);
+      });
+    </script>
+  </head>
+  <body>
+    <h1>시크릿 채팅방 <span id="room" style="font-size: large"></span></h1>
+
+    <div id="chatList"></div>
+
+    <div id="sendMessage" style="position: fixed; bottom: 5%">
+      <input
+        type="text"
+        id="msg"
+        onKeyPress="if( event.keyCode==13 ){msg_send();}"
+      />
+      <button onclick="msg_send()">제출</button>
+    </div>
+  </body>
+</html>
