@@ -11,7 +11,7 @@ interface IOAuthUser {
 }
 
 @Controller()
-export class AuthContoller {
+export class AuthController {
   constructor(
     private readonly userService: UserService, //
     private readonly authService: AuthService,
