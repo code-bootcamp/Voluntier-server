@@ -45,6 +45,7 @@ import * as redisStore from 'cache-manager-redis-store';
       password: 'root',
       database: process.env.DATABASE, // (1) Local: 'mydocker02' , (2) Cloud: 'voluntier'
       entities: [__dirname + '/apis/**/*.entity.*'],
+      timezone: '-09:00', // 한국 기준
       synchronize: true,
       logging: true,
     }),

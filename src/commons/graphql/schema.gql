@@ -110,6 +110,7 @@ type Purchase {
 type Query {
   fetchBoard(boardId: String!): Board!
   fetchBoards(search: String, location1: String, location2: String, page: Int!): [Board!]!
+  fetchBoardsAll: [Board!]!
   fetchBoardsNearDeadline(location1: String, location2: String): [Board!]!
   fetchDonationAmount: Int!
   fetchDonations: [Donation!]!
@@ -157,14 +158,14 @@ input CreateBoardInput {
   centerName: String!
   centerOwnerName: String!
   centerPhone: String!
-  recruitCount: Int!
+  recruitCount: Int
   serviceTime: Int!
   serviceDate: DateTime!
   address: String!
   addressDetail: String!
   location1: String!
   location2: String!
-  urls: [String!]!
+  urls: [String!]
 }
 
 input UpdateBoardInput {
