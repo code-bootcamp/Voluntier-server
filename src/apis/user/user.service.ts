@@ -67,6 +67,19 @@ export class UserService {
     return await this.userRepository.save(newUserInfo);
   }
 
+  async updateImage({ userId, profileImageUrl }) {
+    const userInfo = await this.userRepository.findOne({
+      id: userId,
+    });
+
+    const newUserInfo = {
+      ...userInfo,
+      profileImageUrl: profileImageUrl,
+    };
+
+    return await this.userRepository.save(newUserInfo);
+  }
+
   async delete({ userId }) {
     const result = await this.userRepository.softDelete({ id: userId });
     return result.affected ? true : false;

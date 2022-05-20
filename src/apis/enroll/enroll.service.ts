@@ -43,6 +43,9 @@ export class EnrollService {
         user: {
           id: userId,
         },
+        board: {
+          id: boardId,
+        },
         status: ENROLL_STATUS_ENUM.ENROLL,
       },
     });
@@ -59,8 +62,7 @@ export class EnrollService {
       });
 
       return enroll;
-    }
-    {
+    } else {
       throw new UnprocessableEntityException('이미 등록한 신청 건이 있습니다.');
     }
   }

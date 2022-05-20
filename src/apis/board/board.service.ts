@@ -67,6 +67,20 @@ export class BoardService {
     return result;
   }
 
+  async findAllOfUser({ userId }) {
+    const result = await this.boardRepository.find({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+      relations: ['user', 'boardImage'],
+      order: { createdAt: 'DESC' },
+    });
+
+    return result;
+  }
+
   async findAllNearDeadline({ location1, location2 }) {
     const options: FindManyOptions<Board> = {
       order: { createdAt: 'DESC' },

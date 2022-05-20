@@ -173,6 +173,14 @@ export class BoardResolver {
     return await this.boardService.findAllBeforeEnd();
   }
 
+  @UseGuards(GqlAuthAccessGuard)
+  @Query(() => [Board])
+  async fetchBoardsOfUser(
+    @CurrentUser() currentUser: ICurrentUser, //
+  ) {
+    return await this.boardService.findAllOfUser({ userId: currentUser.id });
+  }
+
   @Query(() => [Board])
   async fetchBoardsNearDeadline(
     @Args('location1', { nullable: true }) location1: string, //
