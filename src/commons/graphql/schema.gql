@@ -225,8 +225,8 @@ input UpdateProductImageInput {
 input CreatePurchaseInput {
   userId: String!
   productId: String!
-  recieverName: String!
-  recieverPhone: String!
+  receiverName: String!
+  receiverPhone: String!
   address: String!
   addressDetail: String!
   itemCount: Int!
