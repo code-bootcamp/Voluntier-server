@@ -21,7 +21,7 @@ for (let i = 0; i < list.length; i++) {
 const re = new RegExp(reStr, 'g');
 
 @Injectable()
-@WebSocketGateway(8080, {
+@WebSocketGateway({
   namespace: 'chat',
   cors: {
     origin: '*',
