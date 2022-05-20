@@ -120,6 +120,7 @@ type Query {
   fetchBoard(boardId: String!): Board!
   fetchBoards(search: String, location1: String, location2: String, page: Int): [Board!]!
   fetchBoardsAll: [Board!]!
+  fetchBoardsOfUser: [Board!]!
   fetchBoardsNearDeadline(location1: String, location2: String): [Board!]!
   fetchBoardsCount(search: String, location1: String, location2: String): Int!
   fetchChatHistory(boardId: String!): [ChatHistory!]!
@@ -160,6 +161,7 @@ type Mutation {
   cancelPurchase(purchaseId: String!): Purchase!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
+  updateUserImage(profileImageUrl: String!): User!
   deleteUser(userId: String!): Boolean!
 }
 

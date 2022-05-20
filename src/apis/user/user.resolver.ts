@@ -52,6 +52,20 @@ export class UserResolver {
     });
   }
 
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => User)
+  async updateUserImage(
+    @CurrentUser() currentUser: any, //
+    @Args('profileImageUrl') profileImageUrl: string,
+  ) {
+    const userId = currentUser.id;
+
+    return await this.userService.updateImage({
+      userId,
+      profileImageUrl,
+    });
+  }
+
   // 관리자만
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Boolean)
