@@ -118,7 +118,7 @@ type ChatHistory {
 
 type Query {
   fetchBoard(boardId: String!): Board!
-  fetchBoards(search: String, location1: String, location2: String, page: Int): [Board!]!
+  fetchBoards(search: String, location1: String, location2: String, page: Int = 1): [Board!]!
   fetchBoardsAll: [Board!]!
   fetchBoardsOfUser: [Board!]!
   fetchBoardsNearDeadline(location1: String, location2: String): [Board!]!

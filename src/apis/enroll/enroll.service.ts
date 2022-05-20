@@ -34,6 +34,7 @@ export class EnrollService {
           id: userId,
         },
       },
+      relations: ['board'],
     });
   }
 
@@ -79,7 +80,8 @@ export class EnrollService {
 
     if (board.user.id === userId || currentUser.isAdmin === true) {
       const prevEnroll: Enroll = await this.enrollRepository.findOne({
-        id: enrollId,
+        where: { id: enrollId },
+        relations: ['user'],
       });
 
       const newEnroll: Enroll = {
@@ -88,6 +90,19 @@ export class EnrollService {
       };
 
       const enroll = await this.enrollRepository.save(newEnroll);
+
+      const serviceTime = board.serviceTime;
+
+      const enrollUser = await this.userRepository.findOne({
+        id: prevEnroll.user.id,
+      });
+
+      const newUser: User = {
+        ...enrollUser,
+        serviceTime: enrollUser.serviceTime + serviceTime,
+      };
+
+      await this.userRepository.save(newUser);
 
       return enroll;
     } else {
