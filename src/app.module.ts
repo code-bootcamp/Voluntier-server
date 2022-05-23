@@ -19,6 +19,7 @@ import * as redisStore from 'cache-manager-redis-store';
 import { CaptchaModule } from './apis/captcha/captcha.module';
 import { ChatHistoryModule } from './apis/chatHistory/chatHistory.module';
 import { ChatModule } from './gateways/chat/chat.module';
+import { DibsModule } from './apis/dibs/dibs.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ChatModule } from './gateways/chat/chat.module';
     CaptchaModule,
     ChatHistoryModule,
     ChatModule,
+    DibsModule,
     DonationModule,
     EnrollModule,
     ImageModule,
