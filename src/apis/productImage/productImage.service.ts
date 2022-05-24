@@ -34,8 +34,6 @@ export class ProductImageService {
     });
 
     const dbImageList2 = dbImageList.map((el) => el.imageUrl);
-    console.log(dbImageList2);
-    console.log(imageList.imageUrl);
 
     // 새로 추가된 이미지가 아닐경우 삭제.
     await Promise.all(

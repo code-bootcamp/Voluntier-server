@@ -12,6 +12,7 @@ export class ChatHistoryService {
 
   async findAll({ boardId }) {
     return await this.chatHistoryRepository.find({
+      order: { createdAt: 'DESC' },
       where: { board: { id: boardId } },
       relations: ['board', 'user'],
     });

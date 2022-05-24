@@ -30,12 +30,11 @@ export class DonationService {
     private readonly connection: Connection,
   ) {}
   async create({ impUid, amount, currentUser }) {
-    console.log(impUid, amount, currentUser);
     const queryRunner = await this.connection.createQueryRunner();
     await queryRunner.connect();
 
     //transaction 시작!
-    await queryRunner.startTransaction('SERIALIZABLE');
+    await queryRunner.startTransaction('READ COMMITTED');
 
     try {
       const isValid = await this.iamportService.checkValidation({
@@ -92,7 +91,7 @@ export class DonationService {
     const queryRunner = await this.connection.createQueryRunner();
     await queryRunner.connect();
     //transaction 시작!
-    await queryRunner.startTransaction('SERIALIZABLE');
+    await queryRunner.startTransaction('READ COMMITTED');
     try {
       const donation = await queryRunner.manager.findOne(
         Donation,
@@ -109,7 +108,6 @@ export class DonationService {
         { id: currentUser.id },
         { lock: { mode: 'pessimistic_write' } },
       );
-      console.log(userInfo);
 
       // 현재 보유한 포인트 확인. 모자랄경우 에러 반환
       if (userInfo.point < donation.amount * POINT_PERCENTAGE)
@@ -126,7 +124,6 @@ export class DonationService {
         },
       });
       const { access_token } = getToken.data.response; // 인증토큰
-      console.log(access_token);
 
       const getCancelData = await axios({
         url: 'https://api.iamport.kr/payments/cancel',
