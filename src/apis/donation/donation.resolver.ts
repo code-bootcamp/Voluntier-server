@@ -51,4 +51,10 @@ export class DonationResolver {
       currentUser,
     });
   }
+
+  // fetchAllUsersDonationsAmount
+  @Query(() => Int)
+  fetchAllUsersDonationsAmount() {
+    return this.donationService.AllUsersDonations();
+  }
 }
