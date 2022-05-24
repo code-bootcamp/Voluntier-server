@@ -193,4 +193,13 @@ export class DonationService {
     const result = await this.userRepository.findOne({ id: currentUser.id });
     return result.donationAmount;
   }
+
+  async AllUsersDonations() {
+    const result = await this.userRepository.find();
+    let sum = 0;
+    for (let i = 0; i < result.length; i++) {
+      sum += result[i].donationAmount;
+    }
+    return sum;
+  }
 }

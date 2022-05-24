@@ -20,6 +20,7 @@ import { CaptchaModule } from './apis/captcha/captcha.module';
 import { ChatHistoryModule } from './apis/chatHistory/chatHistory.module';
 import { ChatModule } from './gateways/chat/chat.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { DibsModule } from './apis/dibs/dibs.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     CaptchaModule,
     ChatHistoryModule,
     ChatModule,
+    DibsModule,
     DonationModule,
     EnrollModule,
     ImageModule,

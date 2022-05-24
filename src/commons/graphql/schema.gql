@@ -116,6 +116,12 @@ type ChatHistory {
   board: Board!
 }
 
+type Dibs {
+  id: String!
+  user: User!
+  product: Product!
+}
+
 type Query {
   fetchBoard(boardId: String!): Board!
   fetchBoards(search: String, location1: String, location2: String, page: Int = 1): [Board!]!
@@ -124,8 +130,10 @@ type Query {
   fetchBoardsNearDeadline(location1: String, location2: String): [Board!]!
   fetchBoardsCount(search: String, location1: String, location2: String): Int!
   fetchChatHistory(boardId: String!): [ChatHistory!]!
+  fetchLogInUserDibs: [Dibs!]!
   fetchDonationAmount: Int!
   fetchDonations: [Donation!]!
+  fetchAllUsersDonationsAmount: Int!
   fetchEnrollsByBoardId(boardId: String!): [Enroll!]!
   fetchEnrollsByUserId: [Enroll!]!
   fetchProduct(productId: String!): Product!
@@ -145,6 +153,8 @@ type Mutation {
   createBoard(createBoardInput: CreateBoardInput!): Board!
   updateBoard(boardId: String!, updateBoardInput: UpdateBoardInput!): Board!
   deleteBoard(boardId: String!): Boolean!
+  createDibs(productId: String!): Dibs!
+  deleteDibs(productId: String!): Boolean!
   createDonation(impUid: String!, amount: Float!): Donation!
   cancelDonation(impUid: String!): Donation!
   createEnroll(boardId: String!): Enroll!
