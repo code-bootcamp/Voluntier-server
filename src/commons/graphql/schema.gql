@@ -105,7 +105,7 @@ type Purchase {
   itemCount: Int!
   usedPoint: Int!
   createdAt: DateTime!
-  cancelledAt: DateTime!
+  cancelledAt: DateTime
 }
 
 type ChatHistory {

@@ -55,7 +55,7 @@ export class ChatGateway {
     console.log(`${client.id} : ${data}`);
     this.server.emit(room, [nickname, filteredMessage, userId]);
     // this.broadcast(room, client, [nickname, filteredMessage]);
-    // await this.chatService.create({ userId: userId, boardId: room, message });
+    await this.chatService.create({ userId: userId, boardId: room, message });
   }
 
   // private broadcast(event, client, message: any) {
