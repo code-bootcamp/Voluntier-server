@@ -21,6 +21,7 @@ import { ChatHistoryModule } from './apis/chatHistory/chatHistory.module';
 import { ChatModule } from './gateways/chat/chat.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DibsModule } from './apis/dibs/dibs.module';
+import { WallpaperModule } from './apis/wallpaper/wallpaper.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { DibsModule } from './apis/dibs/dibs.module';
     ProductImageModule,
     PurchaseModule,
     UserModule,
+    WallpaperModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/commons/graphql/schema.gql',
