@@ -19,6 +19,7 @@ import * as redisStore from 'cache-manager-redis-store';
 import { CaptchaModule } from './apis/captcha/captcha.module';
 import { ChatHistoryModule } from './apis/chatHistory/chatHistory.module';
 import { ChatModule } from './gateways/chat/chat.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import { DibsModule } from './apis/dibs/dibs.module';
 
 @Module({
@@ -65,6 +66,7 @@ import { DibsModule } from './apis/dibs/dibs.module';
       url: process.env.REDIS_URL,
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],

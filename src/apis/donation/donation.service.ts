@@ -81,6 +81,7 @@ export class DonationService {
     } catch (error) {
       //롤백!
       await queryRunner.rollbackTransaction();
+      throw error;
     } finally {
       //연결 해제
       await queryRunner.release();

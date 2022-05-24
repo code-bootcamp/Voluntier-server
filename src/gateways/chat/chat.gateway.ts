@@ -35,32 +35,37 @@ export class ChatGateway {
   @WebSocketServer()
   server;
 
-  wsClients = [];
+  // wsClients = [];
 
-  @SubscribeMessage('joinRoom')
-  connectSomeone(@MessageBody() data: string, @ConnectedSocket() client) {
-    const [nickname, room] = data;
-    console.log(`${nickname}님이 코드: ${room}방에 접속했습니다.`);
-    const comeOn = `${nickname}님이 입장했습니다.`;
-    this.server.emit('comeOn' + room, comeOn);
-    this.wsClients.push(client);
-  }
-
-  private broadcast(event, client, message: any) {
-    for (let c of this.wsClients) {
-      if (client.id == c.id) continue;
-      c.emit(event, message);
-    }
-  }
+  // @SubscribeMessage('joinRoom')
+  // connectSomeone(@MessageBody() data: string, @ConnectedSocket() client) {
+  //   const [nickname, room] = data;
+  //   console.log(`${nickname}님이 코드: ${room}방에 접속했습니다.`);
+  //   const comeOn = `${nickname}님이 입장했습니다.`;
+  //   this.server.emit('comeOn' + room, comeOn);
+  //   this.wsClients.push(client);
+  // }
 
   @SubscribeMessage('send')
   async sendMessage(@MessageBody() data: string, @ConnectedSocket() client) {
-    const [room, nickname, message] = data;
+    const [room, nickname, message, userId] = data;
     // 채팅 필터링
     const filteredMessage = message.replace(re, '**');
     console.log(message);
     console.log(`${client.id} : ${data}`);
-    this.broadcast(room, client, [nickname, filteredMessage]);
-    await this.chatService.create({ userId: nickname, boardId: room, message });
+    this.server.emit(room, [nickname, filteredMessage, userId]);
+    // this.broadcast(room, client, [nickname, filteredMessage]);
+    // await this.chatService.create({ userId: userId, boardId: room, message });
   }
+
+  // private broadcast(event, client, message: any) {
+  //   this.server.emit(event, message);
+
+  // console.log(this.server.sockets);
+  // console.log(this.server.sockets.size);
+  // for (let c of this.wsClients) {
+  //   if (client.id == c.id) continue;
+  //   c.emit(event, message);
+  // }
+  // }
 }

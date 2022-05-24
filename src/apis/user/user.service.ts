@@ -4,9 +4,11 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { sendTemplateToEmail } from 'src/commons/libraries/email';
+import { Donation } from '../donation/entities/donation.entity';
 
 @Injectable()
 export class UserService {
@@ -108,5 +110,29 @@ export class UserService {
 
     if (admin.isAdmin === true)
       throw new UnprocessableEntityException('관리자는 삭제할 수 없습니다!');
+  }
+
+  async sendRegularEmail() {
+    // 지난달 후원한 사람 및 후원액 조회하는 쿼리
+    const users = await getRepository(Donation)
+      .createQueryBuilder('donation')
+      .innerJoin('donation.user', 'user')
+      .select('user.id AS userId, user.name AS name, user.email AS email')
+      .addSelect('MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) as lastMonth')
+      .addSelect(
+        'YEAR(CURRENT_DATE()) as year, MONTH(CURRENT_DATE()) as month, DAY(CURRENT_DATE()) as day',
+      )
+      .addSelect('SUM(donation.amount) AS amount')
+      .where('donation.status = :status', { status: 'PAYMENT' })
+      .andWhere(
+        'MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) = MONTH(donation.createdAt)',
+      )
+      .andWhere('donation.cancelledAt is null')
+      .groupBy('user.id')
+      .getRawMany();
+
+    await sendTemplateToEmail({ users });
+
+    return 'SUCCESS!';
   }
 }
