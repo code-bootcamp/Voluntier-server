@@ -75,6 +75,7 @@ export class PurchaseService {
     return await this.purchaseRepository.find({
       where: { user: { id: currentUser.id } },
       relations: ['product', 'user'],
+      withDeleted: true,
     });
   }
 
