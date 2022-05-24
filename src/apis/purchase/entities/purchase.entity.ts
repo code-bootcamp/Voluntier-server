@@ -68,6 +68,6 @@ export class Purchase {
   createdAt: Date;
 
   @DeleteDateColumn()
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   cancelledAt: Date;
 }
