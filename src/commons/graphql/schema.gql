@@ -37,6 +37,15 @@ enum POINT_TRANSACTION_STATUS_ENUM {
   CANCEL
 }
 
+type Wallpaper {
+  id: String!
+  title: String!
+  imageUrl: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
 type Board {
   id: String!
   user: User!
@@ -120,15 +129,6 @@ type Dibs {
   id: String!
   user: User!
   product: Product!
-}
-
-type Wallpaper {
-  id: String!
-  title: String!
-  imageUrl: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
 }
 
 type Query {
