@@ -9,13 +9,13 @@ import {
 import { ChatSerivce } from './chat.service';
 
 // 채팅 필터링용 정규표현식 생성
-const fs = require('fs');
+import * as fs from 'fs';
 const list = fs.readFileSync('src/gateways/chat/list.txt', 'utf8').split(',');
 let reStr = '';
 for (let i = 0; i < list.length; i++) {
-  reStr += `(${list[i]})`;
-  if (i === list.length - 1) {
-    reStr = `[${reStr}]`;
+  reStr += `${list[i]}`;
+  if (i !== list.length - 1) {
+    reStr = `${reStr}|`;
   }
 }
 const re = new RegExp(reStr, 'g');

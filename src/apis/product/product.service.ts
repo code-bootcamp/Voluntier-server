@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ProductImage } from '../productImage/entities/productImage.entity';
 import { Product } from './entities/product.entity';
 
@@ -22,10 +22,8 @@ export class ProductService {
     const savedproduct = await this.productRepository.save({
       ...product,
     });
-    console.log(savedproduct);
 
     // 저장한 product id로 받아온 url으로 이미지 등록
-    console.log(product.imageUrls);
     await Promise.all(
       product.imageUrls.map(async (el) => {
         return this.productImageRepository.save({
@@ -55,7 +53,6 @@ export class ProductService {
 
   async update({ productId, updateProductInput }) {
     const imageList = updateProductInput.imageUrls;
-    console.log(imageList);
     const product = await this.productRepository.findOne({
       id: productId,
     });
@@ -64,7 +61,6 @@ export class ProductService {
       where: { product: { id: productId } },
     });
     const dbImageList2 = dbImageList.map((el) => el.imageUrl);
-    console.log(dbImageList2);
     await Promise.all(
       dbImageList2.map((el) => {
         if (!imageList.includes(el)) {

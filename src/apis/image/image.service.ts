@@ -15,7 +15,6 @@ export class ImageService {
     }).bucket(process.env.STORAGE_BUCKET);
     // 이미지 파일이 아닐경우
     const fileType = file.mimetype.split('/')[0];
-    console.log(fileType);
     if (fileType !== 'image') {
       throw new UnprocessableEntityException('it is not an image file');
     }

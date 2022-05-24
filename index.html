@@ -12,10 +12,10 @@
       crossorigin="anonymous"
     ></script>
     <!-- socket.io -->
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="https://backendapi.voluntier.site/socket.io/socket.io.js"></script>
 
     <script>
-      const socket = io('ws://localhost:3000/chat');
+      const socket = io('wss://backendapi.voluntier.site/chat');
       const userId = prompt('ID를 알려주세요.');
       if (!userId) {
         window.location.reload();

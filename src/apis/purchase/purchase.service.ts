@@ -23,7 +23,7 @@ export class PurchaseService {
     const queryRunner = await this.connection.createQueryRunner();
     await queryRunner.connect();
     //transaction 시작!
-    await queryRunner.startTransaction('SERIALIZABLE');
+    await queryRunner.startTransaction('READ COMMITTED');
     try {
       const { productId, userId, ...purchase } = createPurchaseInput;
       // 받아온 상품 정보 받아오기
