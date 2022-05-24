@@ -16,6 +16,10 @@
 
     <script>
       const socket = io('ws://localhost:3000/chat');
+      const userId = prompt('ID를 알려주세요.');
+      if (!userId) {
+        window.location.reload();
+      }
       const nickname = prompt('닉네임을 알려주세요.');
       if (!nickname) {
         window.location.reload();
@@ -24,29 +28,32 @@
       if (!room) {
         window.location.reload();
       }
-      socket.emit('joinRoom', nickname, room);
 
-      socket.on('connect', () => {
-        /* 누군가 채팅침 */
-        socket.on(room, (data) => {
+      // socket.emit('joinRoom', nickname, room);
+
+      /* 누군가 채팅침 */
+      socket.on(room, (data) => {
+        if (data[2] === userId) {
+          $('#chatList').append(
+            `<div style="color:red;">나 : ${data[1]}</div>`,
+          );
+        } else {
           $('#chatList').append(`<div>${data[0]} : ${data[1]}</div>`);
-        });
-        /* 누군가 입장 */
-        socket.on('comeOn' + room, (comeOn) => {
-          $('#chatList').append(`<div style="color:blue;">${comeOn}</div>`);
-        });
-
-        socket.on('test', (data) => {
-          console.log(data);
-        });
+        }
       });
+
+      /* 누군가 입장 */
+      // socket.on('comeOn' + room, (comeOn) => {
+      //   console.log('CCCCC');
+      //   $('#chatList').append(`<div style="color:blue;">${comeOn}</div>`);
+      // });
 
       function msg_send() {
         /* 메시지 전송 */
         let message = $('#msg').val();
-        socket.emit('send', room, nickname, message);
+        socket.emit('send', room, nickname, message, userId);
         $('#msg').val('');
-        $('#chatList').append(`<div style="color:red;">나 : ${message}</div>`);
+        // $('#chatList').append(`<div style="color:red;">나 : ${message}</div>`);
       }
 
       $(document).ready(() => {

@@ -1,5 +1,6 @@
 import { UnprocessableEntityException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Cron } from '@nestjs/schedule';
 import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
 import { CurrentUser } from 'src/commons/auth/gql-user.param';
 import { AuthService } from '../auth/auth.service';
@@ -82,5 +83,12 @@ export class UserResolver {
 
     // 삭제
     return await this.userService.delete({ userId });
+  }
+
+  @Mutation(() => String)
+  // @Cron('* * * * *') // 매분 실행
+  // @Cron('00 06 1 * *') // 매월 1일 06:00에 실행
+  async sendThanksMailTest() {
+    return await this.userService.sendRegularEmail();
   }
 }

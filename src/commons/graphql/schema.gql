@@ -22,6 +22,21 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Donation {
+  id: String!
+  user: User!
+  impUid: String!
+  amount: Int!
+  status: POINT_TRANSACTION_STATUS_ENUM!
+  createdAt: DateTime!
+  cancelledAt: DateTime!
+}
+
+enum POINT_TRANSACTION_STATUS_ENUM {
+  PAYMENT
+  CANCEL
+}
+
 type Board {
   id: String!
   user: User!
@@ -47,21 +62,6 @@ type BoardImage {
   id: String!
   board: Board!
   imageUrl: String!
-}
-
-type Donation {
-  id: String!
-  user: User!
-  impUid: String!
-  amount: Int!
-  status: POINT_TRANSACTION_STATUS_ENUM!
-  createdAt: DateTime!
-  cancelledAt: DateTime!
-}
-
-enum POINT_TRANSACTION_STATUS_ENUM {
-  PAYMENT
-  CANCEL
 }
 
 type Enroll {
@@ -163,6 +163,7 @@ type Mutation {
   updateUser(updateUserInput: UpdateUserInput!): User!
   updateUserImage(profileImageUrl: String!): User!
   deleteUser(userId: String!): Boolean!
+  sendThanksMailTest: String!
 }
 
 input CreateBoardInput {

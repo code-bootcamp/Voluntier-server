@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   my-backend:
-    image: asia.gcr.io/solid-feat-349705/team-project:1.38
+    image: asia.gcr.io/code-camp-team-project-350914/team-project:0.1
     platform: linux/x86_64
     build:
       context: .
