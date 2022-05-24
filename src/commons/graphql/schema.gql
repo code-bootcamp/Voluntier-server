@@ -122,6 +122,15 @@ type Dibs {
   product: Product!
 }
 
+type Wallpaper {
+  id: String!
+  title: String!
+  imageUrl: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
 type Query {
   fetchBoard(boardId: String!): Board!
   fetchBoards(search: String, location1: String, location2: String, page: Int = 1): [Board!]!
@@ -142,6 +151,8 @@ type Query {
   fetchProductImages(productId: String!): [ProductImage!]!
   fetchPurchases: [Purchase!]!
   fetchLoginUser: User!
+  fetchWallpaper(wallpaperId: String!): Wallpaper!
+  fetchWallpapers: [Wallpaper!]!
 }
 
 type Mutation {
@@ -174,6 +185,10 @@ type Mutation {
   updateUserImage(profileImageUrl: String!): User!
   deleteUser(userId: String!): Boolean!
   sendThanksMailTest: String!
+  resetPassword(phone: String!, email: String!, password: String!): String!
+  createWallpaper(title: String!, imageUrl: String!): Wallpaper!
+  updateWallpaper(wallpaperId: String!, title: String!, imageUrl: String!): Wallpaper!
+  deleteWallpaper(wallpaperId: String!): Boolean!
 }
 
 input CreateBoardInput {

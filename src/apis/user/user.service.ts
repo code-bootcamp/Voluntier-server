@@ -30,6 +30,14 @@ export class UserService {
     });
   }
 
+  async findOneByEmailPhone({ email, provider, phone }) {
+    return await this.userRepository.findOne({
+      email: email,
+      provider: provider,
+      phone: phone,
+    });
+  }
+
   async create({ createUserInput }) {
     const userInfo = await this.userRepository.findOne({
       email: createUserInput.email,
@@ -134,5 +142,20 @@ export class UserService {
     await sendTemplateToEmail({ users });
 
     return 'SUCCESS!';
+  }
+
+  async resetPassword({ userId, password }) {
+    const userInfo = await this.userRepository.findOne({
+      id: userId,
+    });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUserInfo = {
+      ...userInfo,
+      password: hashedPassword,
+    };
+
+    return await this.userRepository.save(newUserInfo);
   }
 }

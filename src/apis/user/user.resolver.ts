@@ -33,6 +33,11 @@ export class UserResolver {
     const existData = await this.authService.fetchPhoneToken({ phone });
 
     if (existData !== undefined && existData.isAuth) {
+      await this.authService.updatePhoneToken({
+        token: existData.token,
+        phone: phone,
+        isAuth: false,
+      });
       return await this.userService.create({ createUserInput });
     } else {
       throw new UnprocessableEntityException('인증되지 않은 번호입니다.');
@@ -90,5 +95,35 @@ export class UserResolver {
   // @Cron('00 06 1 * *') // 매월 1일 06:00에 실행
   async sendThanksMailTest() {
     return await this.userService.sendRegularEmail();
+  }
+
+  @Mutation(() => String)
+  async resetPassword(
+    @Args('phone') phone: string, //
+    @Args('email') email: string,
+    @Args('password') password: string,
+  ) {
+    const existData = await this.authService.fetchPhoneToken({ phone });
+
+    if (existData !== undefined && existData.isAuth) {
+      const user = await this.userService.findOneByEmailPhone({
+        email,
+        provider: 'SITE',
+        phone,
+      });
+
+      if (user) {
+        await this.authService.updatePhoneToken({
+          token: existData.token,
+          phone: phone,
+          isAuth: false,
+        });
+        await this.userService.resetPassword({ userId: user.id, password });
+      } else {
+        throw new UnprocessableEntityException('해당 유저 정보가 없습니다.');
+      }
+    } else {
+      throw new UnprocessableEntityException('인증되지 않은 번호입니다.');
+    }
   }
 }
