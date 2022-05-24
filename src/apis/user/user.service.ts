@@ -9,6 +9,7 @@ import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { sendTemplateToEmail } from 'src/commons/libraries/email';
 import { Donation } from '../donation/entities/donation.entity';
+import { Wallpaper } from '../wallpaper/entities/wallpaper.entity';
 
 @Injectable()
 export class UserService {
@@ -139,7 +140,19 @@ export class UserService {
       .groupBy('user.id')
       .getRawMany();
 
-    await sendTemplateToEmail({ users });
+    const wallpapers = await getRepository(Wallpaper)
+      .createQueryBuilder('wallpaper')
+      .select('wallpaper.imageUrl AS imageUrl')
+      .where(
+        'MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) = MONTH(wallpaper.createdAt)',
+      )
+      .orderBy('wallpaper.createdAt')
+      .getRawMany();
+
+    // console.log('USERS:', users);
+    // console.log('WALLPAPERS:', wallpapers);
+
+    await sendTemplateToEmail({ users, wallpapers });
 
     return 'SUCCESS!';
   }

@@ -1,7 +1,15 @@
 import axios from 'axios';
 
 // Create Template
-export function getTemplate({ name, lastMonth, year, month, day, amount }) {
+export function getTemplate({
+  name,
+  lastMonth,
+  year,
+  month,
+  day,
+  amount,
+  imgList,
+}) {
   return `
   <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -260,6 +268,10 @@ table, td { color: #000000; } a { color: #3598db; text-decoration: underline; } 
     </span></p>
 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
 <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 16px; line-height: 22.4px; font-family: Lato, sans-serif;">${name}님의 후원으로, 우리가 배부르게 먹고 따뜻하게 잘 수 있었어요! 지난 ${lastMonth}월에는, <strong>${amount}원</strong> 만큼 후원해주셨어요!</span></p>
+<p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
+<p style="font-size: 14px; line-height: 140%;">
+  ${imgList}
+</p>
   </div>
 
       </td>
@@ -493,10 +505,20 @@ table, td { color: #000000; } a { color: #3598db; text-decoration: underline; } 
 }
 
 // Send Mail
-export async function sendTemplateToEmail({ users }) {
+export async function sendTemplateToEmail({ users, wallpapers }) {
   const appKey = process.env.MAIL_APP_KEY;
   const XSecretKey = process.env.MAIL_X_SECRET_KEY;
   const sender = process.env.MAIL_SENDER;
+
+  let imgList = '';
+
+  for (let i = 0; i < wallpapers.length; i++) {
+    imgList += `
+    <div>
+    <img align="center" border="0" src="${wallpapers[i].imageUrl}" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;" width="185.5" class="v-src-width v-src-max-width"/>
+    </div>
+    `;
+  }
 
   for (let i = 0; i < users.length; i++) {
     const { name, email, lastMonth, year, month, day, amount } = users[i];
@@ -508,6 +530,7 @@ export async function sendTemplateToEmail({ users }) {
       month,
       day,
       amount,
+      imgList,
     });
 
     await axios.post(
