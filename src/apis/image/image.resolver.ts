@@ -6,7 +6,11 @@ import { ImageService } from './image.service';
 export class ImageResolver {
   constructor(private readonly imageService: ImageService) {}
 
-  //uploadImage
+  /**
+   *
+   * @param file 업로드할 파일
+   * @returns 업로드한 파일의 URL
+   */
   @Mutation(() => String)
   async uploadImage(
     @Args({ name: 'file', type: () => GraphQLUpload }) file: FileUpload,

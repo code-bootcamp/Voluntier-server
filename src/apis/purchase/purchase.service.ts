@@ -1,5 +1,6 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ICurrentUser } from 'src/commons/auth/gql-user.param';
 import { Connection, Repository } from 'typeorm';
 import { Product } from '../product/entities/product.entity';
 import { User } from '../user/entities/user.entity';
@@ -19,7 +20,7 @@ export class PurchaseService {
     private readonly connection: Connection,
   ) {}
 
-  async create({ createPurchaseInput }) {
+  async create({ createPurchaseInput }: { createPurchaseInput: any }) {
     const queryRunner = await this.connection.createQueryRunner();
     await queryRunner.connect();
     //transaction 시작!
@@ -71,7 +72,7 @@ export class PurchaseService {
     }
   }
 
-  async findAll({ currentUser }) {
+  async findAll({ currentUser }: { currentUser: ICurrentUser }) {
     return await this.purchaseRepository.find({
       where: { user: { id: currentUser.id } },
       relations: ['product', 'user'],
@@ -79,7 +80,7 @@ export class PurchaseService {
     });
   }
 
-  async cancel({ purchaseId }) {
+  async cancel({ purchaseId }: { purchaseId: string }) {
     const queryRunner = await this.connection.createQueryRunner();
     await queryRunner.connect();
 

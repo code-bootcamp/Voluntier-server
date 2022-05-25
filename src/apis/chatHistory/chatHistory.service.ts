@@ -10,7 +10,7 @@ export class ChatHistoryService {
     private readonly chatHistoryRepository: Repository<ChatHistory>,
   ) {}
 
-  async findAll({ boardId }) {
+  async findAll({ boardId }: { boardId: string }) {
     return await this.chatHistoryRepository.find({
       order: { createdAt: 'ASC' },
       where: { board: { id: boardId } },
@@ -18,7 +18,15 @@ export class ChatHistoryService {
     });
   }
 
-  async create({ userId, boardId, message }) {
+  async create({
+    userId,
+    boardId,
+    message,
+  }: {
+    userId: string;
+    boardId: string;
+    message: string;
+  }) {
     const result = await this.chatHistoryRepository.save({
       user: { id: userId },
       board: { id: boardId },

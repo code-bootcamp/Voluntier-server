@@ -9,7 +9,13 @@ import { Donation } from './entities/donation.entity';
 export class DonationResolver {
   constructor(private readonly donationService: DonationService) {}
 
-  // createDonation
+  /**
+   *
+   * @param impUid 결제 완료후 iamport로 부터 받은 impUid
+   * @param amount 결제한 금액
+   * @param currentUser 현재 접속한 유저
+   * @returns 등록된 결제 정보
+   */
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Donation)
   createDonation(
@@ -24,6 +30,12 @@ export class DonationResolver {
     });
   }
 
+  /**
+   *
+   * @param impUid 취소할 결제의 impUid
+   * @param currentUser 현재 접속한 유저
+   * @returns 취소한 결제의 정보
+   */
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Donation)
   async cancelDonation(
@@ -36,14 +48,22 @@ export class DonationResolver {
     });
   }
 
-  // fetchDonationAmount
+  /**
+   *
+   * @param currentUser 현재 접속한 유저
+   * @returns 현재 접속한 유저의 기부 총액
+   */
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => Int)
   fetchDonationAmount(@CurrentUser() currentUser: ICurrentUser) {
     return this.donationService.totalDonations({ currentUser });
   }
 
-  // fetchDonations
+  /**
+   *
+   * @param currentUser 현재 접속한 유저
+   * @returns 현재 접속한 유저의 기부 내역 가져오기
+   */
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => [Donation])
   fetchDonations(@CurrentUser() currentUser: ICurrentUser) {
@@ -52,7 +72,10 @@ export class DonationResolver {
     });
   }
 
-  // fetchAllUsersDonationsAmount
+  /**
+   *
+   * @returns 모든 유저의 기부 총액
+   */
   @Query(() => Int)
   fetchAllUsersDonationsAmount() {
     return this.donationService.AllUsersDonations();

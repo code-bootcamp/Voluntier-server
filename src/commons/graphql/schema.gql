@@ -177,7 +177,7 @@ type Mutation {
   updateProduct(productId: String!, updateProductInput: UpdateProductInput!): Product!
   createProductImage(createProductImageInput: CreateProductImageInput!): ProductImage!
   updateProductImage(updateProductImageInput: UpdateProductImageInput!): [ProductImage!]!
-  deleteProductImage(productImageId: String!): ProductImage!
+  deleteProductImage(productImageId: String!): Boolean!
   createPurchase(createPurchaseInput: CreatePurchaseInput!): Purchase!
   cancelPurchase(purchaseId: String!): Purchase!
   createUser(createUserInput: CreateUserInput!): User!

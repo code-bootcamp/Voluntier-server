@@ -8,12 +8,11 @@ export class ChatHistoryResolver {
     private readonly chatHistoryService: ChatHistoryService, //
   ) {}
 
-  // @Mutation(() => ChatHistory)
-  // async createChatHistory(
-  // ) {
-  //   return await this.chatHistoryService.create();
-  // }
-
+  /**
+   *
+   * @param boardId 채팅내역을 가져올 게시물의 ID
+   * @returns
+   */
   @Query(() => [ChatHistory])
   async fetchChatHistory(
     @Args('boardId') boardId: string, //

@@ -10,7 +10,13 @@ export class IamportService {
     @InjectRepository(Donation)
     private readonly donationRepository: Repository<Donation>,
   ) {}
-  async checkValidation({ impUid, amount }) {
+  async checkValidation({
+    impUid,
+    amount,
+  }: {
+    impUid: string;
+    amount: number;
+  }) {
     const getToken = await axios({
       url: 'https://api.iamport.kr/users/getToken',
       method: 'post', // POST method
@@ -34,15 +40,9 @@ export class IamportService {
     }
 
     return true;
-
-    // if (!paymentData || paymentData.amount !== amount) {
-    //     throw new UnprocessableEntityException(
-    //         '유효하지 않은 결제 정보입니다.',
-    //     );
-    // }
   }
 
-  async checkDouble({ impUid }) {
+  async checkDouble({ impUid }: { impUid: string }) {
     const isDouble = await this.donationRepository.findOne({
       impUid,
     });
@@ -52,8 +52,5 @@ export class IamportService {
     }
 
     return false;
-    // if (isDouble) {
-    //     throw new ConflictException('중복 결제건입니다.');
-    // }
   }
 }

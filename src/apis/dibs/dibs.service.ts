@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ICurrentUser } from 'src/commons/auth/gql-user.param';
 import { Repository } from 'typeorm';
 import { Dibs } from './entity/dibs.entity';
 
@@ -10,8 +11,13 @@ export class DibsService {
     private readonly dibsRepository: Repository<Dibs>,
   ) {}
 
-  async create({ currentUser, productId }) {
-    console.log(currentUser);
+  async create({
+    currentUser,
+    productId,
+  }: {
+    currentUser: ICurrentUser;
+    productId: string;
+  }) {
     const exist = await this.dibsRepository.findOne({
       where: {
         product: { id: productId },
@@ -19,8 +25,6 @@ export class DibsService {
       },
       relations: ['product', 'user'],
     });
-
-    console.log(exist);
 
     if (exist) {
       return exist;
@@ -33,7 +37,13 @@ export class DibsService {
     });
   }
 
-  async delete({ currentUser, productId }) {
+  async delete({
+    currentUser,
+    productId,
+  }: {
+    currentUser: ICurrentUser;
+    productId: string;
+  }) {
     const result = await this.dibsRepository.delete({
       product: { id: productId },
       user: { id: currentUser.id },
@@ -41,7 +51,7 @@ export class DibsService {
     return result.affected ? true : false;
   }
 
-  async getLogInUserDibs({ currentUser }) {
+  async getLogInUserDibs({ currentUser }: { currentUser: ICurrentUser }) {
     return await this.dibsRepository.find({
       where: { user: { id: currentUser.id } },
       relations: ['product', 'user'],
