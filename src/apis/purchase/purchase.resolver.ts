@@ -11,19 +11,34 @@ export class PurchaseResolver {
   constructor(
     private readonly purchaseService: PurchaseService, //
   ) {}
-  // createPurchase
+
+  /**
+   *
+   * @param createPurchaseInput 구매내역에 들어갈 정보들
+   * @returns 구매내역에 저장된 정보
+   */
   @Mutation(() => Purchase)
   createPurchase(
     @Args('createPurchaseInput') createPurchaseInput: CreatePurchaseInput,
   ) {
     return this.purchaseService.create({ createPurchaseInput });
   }
-  // cancelPurchase
+
+  /**
+   *
+   * @param purchaseId 구매취소할 구매내역의 ID
+   * @returns 취소된 구매내역의 정보
+   */
   @Mutation(() => Purchase)
   cancelPurchase(@Args('purchaseId') purchaseId: string) {
     return this.purchaseService.cancel({ purchaseId });
   }
-  // fetchPurchases
+
+  /**
+   *
+   * @param currentUser 현재 접속한 유저의 정보
+   * @returns 현재 접속한 유저의 모든 구매내역
+   */
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => [Purchase])
   fetchPurchases(@CurrentUser() currentUser: ICurrentUser) {

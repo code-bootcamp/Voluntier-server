@@ -10,7 +10,15 @@ export class ChatSerivce {
     private readonly chatHistoryRepository: Repository<ChatHistory>,
   ) {}
 
-  async create({ userId, boardId, message }) {
+  async create({
+    userId,
+    boardId,
+    message,
+  }: {
+    userId: string;
+    boardId: string;
+    message: string;
+  }) {
     const result = await this.chatHistoryRepository.save({
       user: { id: userId },
       board: { id: boardId },

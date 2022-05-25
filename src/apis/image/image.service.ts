@@ -13,11 +13,13 @@ export class ImageService {
       keyFilename: process.env.STORAGE_KEY_FILENAME,
       projectId: process.env.STORAGE_PROJECT_ID,
     }).bucket(process.env.STORAGE_BUCKET);
+
     // 이미지 파일이 아닐경우
     const fileType = file.mimetype.split('/')[0];
     if (fileType !== 'image') {
       throw new UnprocessableEntityException('it is not an image file');
     }
+
     const url = await new Promise((resolve, reject) => {
       file
         .createReadStream()
@@ -27,7 +29,9 @@ export class ImageService {
         )
         .on('error', (error) => reject(error));
     });
+
     console.log('이미지 업로드 성공');
+
     return url;
   }
 }

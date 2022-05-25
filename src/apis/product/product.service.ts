@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductImage } from '../productImage/entities/productImage.entity';
+import { CreateProductInput } from './dto/createProduct.input';
+import { UpdateProductInput } from './dto/updateProduct.input';
 import { Product } from './entities/product.entity';
 
 @Injectable()
@@ -14,12 +16,15 @@ export class ProductService {
     private readonly productImageRepository: Repository<ProductImage>,
   ) {}
 
-  async create({ createProductInput }) {
-    console.log(createProductInput);
+  async create({
+    createProductInput,
+  }: {
+    createProductInput: CreateProductInput;
+  }) {
     // product에 입력받은 값들 할당
     const { ...product } = createProductInput;
     // product를 저장
-    const savedproduct = await this.productRepository.save({
+    const savedProduct = await this.productRepository.save({
       ...product,
     });
 
@@ -27,7 +32,7 @@ export class ProductService {
     await Promise.all(
       product.imageUrls.map(async (el) => {
         return this.productImageRepository.save({
-          product: { id: savedproduct.id },
+          product: { id: savedProduct.id },
           imageUrl: el,
         });
       }),
@@ -35,14 +40,14 @@ export class ProductService {
 
     // 이미지도 등록
     const updatedProduct = await this.productRepository.findOne({
-      where: { id: savedproduct.id },
+      where: { id: savedProduct.id },
       relations: ['productImage'],
     });
 
     return updatedProduct;
   }
 
-  async delete({ productId }) {
+  async delete({ productId }: { productId: string }) {
     // 상품id를받아서 논리삭제 진행.
     const result = await this.productRepository.softDelete({
       id: productId,
@@ -51,7 +56,13 @@ export class ProductService {
     return result.affected ? true : false;
   }
 
-  async update({ productId, updateProductInput }) {
+  async update({
+    productId,
+    updateProductInput,
+  }: {
+    productId: string;
+    updateProductInput: UpdateProductInput;
+  }) {
     const imageList = updateProductInput.imageUrls;
     const product = await this.productRepository.findOne({
       id: productId,
@@ -109,7 +120,7 @@ export class ProductService {
     return result;
   }
 
-  async findOne({ productId }) {
+  async findOne({ productId }: { productId: string }) {
     return await this.productRepository.findOne({
       where: { id: productId },
       relations: ['productImage'],

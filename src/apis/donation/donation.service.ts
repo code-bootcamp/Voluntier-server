@@ -12,6 +12,7 @@ import {
   POINT_TRANSACTION_STATUS_ENUM,
 } from './entities/donation.entity';
 import axios from 'axios';
+import { ICurrentUser } from 'src/commons/auth/gql-user.param';
 
 // 후원 : 포인트 비율
 const POINT_PERCENTAGE = 0.1;
@@ -29,7 +30,15 @@ export class DonationService {
 
     private readonly connection: Connection,
   ) {}
-  async create({ impUid, amount, currentUser }) {
+  async create({
+    impUid,
+    amount,
+    currentUser,
+  }: {
+    impUid: string;
+    amount: number;
+    currentUser: ICurrentUser;
+  }) {
     const queryRunner = await this.connection.createQueryRunner();
     await queryRunner.connect();
 
@@ -87,7 +96,13 @@ export class DonationService {
     }
   }
 
-  async cancel({ impUid, currentUser }) {
+  async cancel({
+    impUid,
+    currentUser,
+  }: {
+    impUid: string;
+    currentUser: ICurrentUser;
+  }) {
     const queryRunner = await this.connection.createQueryRunner();
     await queryRunner.connect();
     //transaction 시작!
@@ -177,7 +192,7 @@ export class DonationService {
     }
   }
 
-  async findAll({ currentUser }) {
+  async findAll({ currentUser }: { currentUser: ICurrentUser }) {
     // 여태까지 기부한 내역 불러오기
     const result = await this.donationRepository.find({
       user: { id: currentUser.id },
@@ -186,7 +201,7 @@ export class DonationService {
     return result;
   }
 
-  async totalDonations({ currentUser }) {
+  async totalDonations({ currentUser }: { currentUser: ICurrentUser }) {
     const result = await this.userRepository.findOne({ id: currentUser.id });
     return result.donationAmount;
   }
