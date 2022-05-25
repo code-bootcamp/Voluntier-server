@@ -10,7 +10,12 @@ import * as bcrypt from 'bcrypt';
 import { sendTemplateToEmail } from 'src/commons/libraries/email';
 import { Donation } from '../donation/entities/donation.entity';
 import { Wallpaper } from '../wallpaper/entities/wallpaper.entity';
+import { CreateUserInput } from './dto/createUser.input';
+import { UpdateUserInput } from './dto/updateUser.input';
 
+/**
+ * User Service
+ */
 @Injectable()
 export class UserService {
   constructor(
@@ -18,20 +23,52 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async findOne({ userId }) {
+  /**
+   * Find one User
+   * @param userId ID of User
+   * @returns `User`
+   */
+  async findOne({ userId }: { userId: string }) {
     return await this.userRepository.findOne({
       id: userId,
     });
   }
 
-  async findOneByEmail({ email, provider }) {
+  /**
+   * Find one User by Email
+   * @param email email of User(ex. `aaaaa@gmail.com`)
+   * @param provider User Provider(`SITE, GOOGLE, NAVER, KAKAO`)
+   * @returns `User`
+   */
+  async findOneByEmail({
+    email,
+    provider,
+  }: {
+    email: string;
+    provider: string;
+  }) {
     return await this.userRepository.findOne({
       email: email,
       provider: provider,
     });
   }
 
-  async findOneByEmailPhone({ email, provider, phone }) {
+  /**
+   * Find one User by Email and Phone
+   * @param email email of User(ex. `aaaaa@gmail.com`)
+   * @param provider User Provider(`SITE, GOOGLE, NAVER, KAKAO`)
+   * @param phone phone of User(ex. `01011112222`)
+   * @returns `User`
+   */
+  async findOneByEmailPhone({
+    email,
+    provider,
+    phone,
+  }: {
+    email: string;
+    provider: string;
+    phone: string;
+  }) {
     return await this.userRepository.findOne({
       email: email,
       provider: provider,
@@ -39,7 +76,12 @@ export class UserService {
     });
   }
 
-  async create({ createUserInput }) {
+  /**
+   * Create User
+   * @param createUserInput input type of createUser
+   * @returns `User`
+   */
+  async create({ createUserInput }: { createUserInput: CreateUserInput }) {
     const userInfo = await this.userRepository.findOne({
       email: createUserInput.email,
       provider:
@@ -52,20 +94,32 @@ export class UserService {
 
     const hashedPassword = await bcrypt.hash(createUserInput.password, 10);
 
-    const saveInput = {
+    const user: User = await this.userRepository.save({
       ...createUserInput,
       password: hashedPassword,
-    };
+    });
 
-    return await this.userRepository.save(saveInput);
+    return user;
   }
 
-  async update({ userId, updateUserInput }) {
+  /**
+   * Update User
+   * @param userId ID of User
+   * @param updateUserInput input type of updateUser
+   * @returns `User`
+   */
+  async update({
+    userId,
+    updateUserInput,
+  }: {
+    userId: string;
+    updateUserInput: UpdateUserInput;
+  }) {
     const userInfo = await this.userRepository.findOne({
       id: userId,
     });
 
-    const newUserInfo = {
+    const newUserInfo: User = {
       ...userInfo,
       ...updateUserInput,
     };
@@ -78,12 +132,24 @@ export class UserService {
     return await this.userRepository.save(newUserInfo);
   }
 
-  async updateImage({ userId, profileImageUrl }) {
+  /**
+   * Update User Image
+   * @param userId ID of User
+   * @param profileImageUrl image url of profile
+   * @returns `User`
+   */
+  async updateImage({
+    userId,
+    profileImageUrl,
+  }: {
+    userId: string;
+    profileImageUrl: string;
+  }) {
     const userInfo = await this.userRepository.findOne({
       id: userId,
     });
 
-    const newUserInfo = {
+    const newUserInfo: User = {
       ...userInfo,
       profileImageUrl: profileImageUrl,
     };
@@ -91,19 +157,21 @@ export class UserService {
     return await this.userRepository.save(newUserInfo);
   }
 
-  async delete({ userId }) {
+  /**
+   * Delete User
+   * @param userId ID of User
+   * @returns delete result(`true`, `false`)
+   */
+  async delete({ userId }: { userId: string }) {
     const result = await this.userRepository.softDelete({ id: userId });
     return result.affected ? true : false;
   }
 
-  // async checkExist({ userId }) {
-  //   const user = await this.userRepository.findOne({
-  //     where: { id: userId },
-  //   });
-  //   if (!user) throw new UnprocessableEntityException('없는 회원입니다!');
-  // }
-
-  async checkAdmin({ userId }) {
+  /**
+   * Check if User is admin
+   * @param userId ID of User
+   */
+  async checkAdmin({ userId }: { userId: string }) {
     const admin = await this.userRepository.findOne({
       id: userId,
     });
@@ -112,7 +180,11 @@ export class UserService {
       throw new UnprocessableEntityException('관리자가 아닙니다!');
   }
 
-  async noAdmin({ userId }) {
+  /**
+   * Check if User is not admin
+   * @param userId ID of User
+   */
+  async noAdmin({ userId }: { userId: string }) {
     const admin = await this.userRepository.findOne({
       id: userId,
     });
@@ -121,6 +193,10 @@ export class UserService {
       throw new UnprocessableEntityException('관리자는 삭제할 수 없습니다!');
   }
 
+  /**
+   * Send Regular Mail
+   * @returns send result(`SUCCESS`)
+   */
   async sendRegularEmail() {
     // 지난달 후원한 사람 및 후원액 조회하는 쿼리
     const users = await getRepository(Donation)
@@ -149,22 +225,31 @@ export class UserService {
       .orderBy('wallpaper.createdAt')
       .getRawMany();
 
-    // console.log('USERS:', users);
-    // console.log('WALLPAPERS:', wallpapers);
-
     await sendTemplateToEmail({ users, wallpapers });
 
     return 'SUCCESS!';
   }
 
-  async resetPassword({ userId, password }) {
+  /**
+   * Reset Password
+   * @param userId ID of User
+   * @param password password of User
+   * @returns `User`
+   */
+  async resetPassword({
+    userId,
+    password,
+  }: {
+    userId: string;
+    password: string;
+  }) {
     const userInfo = await this.userRepository.findOne({
       id: userId,
     });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUserInfo = {
+    const newUserInfo: User = {
       ...userInfo,
       password: hashedPassword,
     };

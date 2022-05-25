@@ -13,4 +13,6 @@ export class CreateUserInput {
 
   @Field(() => String)
   phone: string;
+
+  provider: string;
 }

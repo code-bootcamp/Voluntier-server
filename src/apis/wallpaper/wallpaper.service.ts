@@ -3,6 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Wallpaper } from './entities/wallpaper.entity';
 
+/**
+ * Wallpaper Service
+ */
 @Injectable()
 export class WallpaperService {
   constructor(
@@ -10,7 +13,12 @@ export class WallpaperService {
     private readonly wallpaperRepository: Repository<Wallpaper>, //
   ) {}
 
-  async findOne({ wallpaperId }) {
+  /**
+   * Find one Wallpaper
+   * @param wallpaperId ID of Wallpaper
+   * @returns `Wallpaper`
+   */
+  async findOne({ wallpaperId }: { wallpaperId: string }) {
     const result = await this.wallpaperRepository.findOne({
       where: { id: wallpaperId },
     });
@@ -18,14 +26,24 @@ export class WallpaperService {
     return result;
   }
 
+  /**
+   * Find All Wallpapers
+   * @returns `[Wallpaper]`
+   */
   async findAll() {
     const result = await this.wallpaperRepository.find();
 
     return result;
   }
 
-  async create({ title, imageUrl }) {
-    const wallpaper = await this.wallpaperRepository.save({
+  /**
+   * Create Wallpaper
+   * @param title title of Wallpaper
+   * @param imageUrl image url of Wallpaper
+   * @returns `Wallpaper`
+   */
+  async create({ title, imageUrl }: { title: string; imageUrl: string }) {
+    const wallpaper: Wallpaper = await this.wallpaperRepository.save({
       title: title,
       imageUrl: imageUrl,
     });
@@ -33,12 +51,27 @@ export class WallpaperService {
     return wallpaper;
   }
 
-  async update({ wallpaperId, title, imageUrl }) {
+  /**
+   * Update Wallpaper
+   * @param wallpaperId ID of Wallpaper
+   * @param title title of Wallpaper
+   * @param imageUrl image url of Wallpaper
+   * @returns `Wallpaper`
+   */
+  async update({
+    wallpaperId,
+    title,
+    imageUrl,
+  }: {
+    wallpaperId: string;
+    title: string;
+    imageUrl: string;
+  }) {
     const prevWallpaper = await this.wallpaperRepository.findOne({
       where: { id: wallpaperId },
     });
 
-    const newWallpaper = {
+    const newWallpaper: Wallpaper = {
       ...prevWallpaper,
       title: title,
       imageUrl: imageUrl,
@@ -49,7 +82,12 @@ export class WallpaperService {
     return wallpaper;
   }
 
-  async delete({ wallpaperId }) {
+  /**
+   * Delete Wallpaper
+   * @param wallpaperId ID of Wallpaper
+   * @returns delete result(`true`, `false`)
+   */
+  async delete({ wallpaperId }: { wallpaperId: string }) {
     const result = await this.wallpaperRepository.softDelete({
       id: wallpaperId,
     });
@@ -57,7 +95,11 @@ export class WallpaperService {
     return result.affected ? true : false;
   }
 
-  async checkExist({ wallpaperId }) {
+  /**
+   * Check if Wallpaper exists
+   * @param wallpaperId ID of Wallpaper
+   */
+  async checkExist({ wallpaperId }: { wallpaperId: string }) {
     const wallpaper = await this.wallpaperRepository.findOne({
       id: wallpaperId,
     });

@@ -29,9 +29,6 @@
         window.location.reload();
       }
 
-      // socket.emit('joinRoom', nickname, room);
-
-      /* 누군가 채팅침 */
       socket.on(room, (data) => {
         if (data[2] === userId) {
           $('#chatList').append(
@@ -42,18 +39,11 @@
         }
       });
 
-      /* 누군가 입장 */
-      // socket.on('comeOn' + room, (comeOn) => {
-      //   console.log('CCCCC');
-      //   $('#chatList').append(`<div style="color:blue;">${comeOn}</div>`);
-      // });
-
       function msg_send() {
         /* 메시지 전송 */
         let message = $('#msg').val();
         socket.emit('send', room, nickname, message, userId);
         $('#msg').val('');
-        // $('#chatList').append(`<div style="color:red;">나 : ${message}</div>`);
       }
 
       $(document).ready(() => {

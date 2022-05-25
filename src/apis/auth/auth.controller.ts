@@ -1,23 +1,34 @@
 import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 
+/**
+ * Interface of Authorized User
+ * @type `name`, `email`, `phone`, `password`, `provider` of `User`
+ */
 interface IOAuthUser {
-  user: Pick<User, 'name' | 'email' | 'phone' | 'password'>;
+  user: Pick<User, 'name' | 'email' | 'phone' | 'password' | 'provider'>;
 }
 
+/**
+ * Social Login REST API Controller
+ * @APIs `loginGoogle`, `loginNaver`, `loginKakao`
+ */
 @Controller()
 export class AuthController {
   constructor(
     private readonly userService: UserService, //
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
   ) {}
 
+  /**
+   * Google Social Login REST API
+   * @type [`GET`]
+   * @endPoint `/login/google`
+   */
   @Get('/login/google')
   @UseGuards(AuthGuard('google'))
   async loginGoogle(
@@ -27,6 +38,11 @@ export class AuthController {
     this.checkUserAndRefreshToken({ req, res });
   }
 
+  /**
+   * Naver Social Login REST API
+   * @type [`GET`]
+   * @endPoint `/login/naver`
+   */
   @Get('/login/naver')
   @UseGuards(AuthGuard('naver'))
   async loginNaver(
@@ -36,6 +52,11 @@ export class AuthController {
     this.checkUserAndRefreshToken({ req, res });
   }
 
+  /**
+   * Kakao Social Login REST API
+   * @type [`GET`]
+   * @endPoint `/login/kakao`
+   */
   @Get('/login/kakao')
   @UseGuards(AuthGuard('kakao'))
   async loginKakao(
@@ -45,14 +66,25 @@ export class AuthController {
     this.checkUserAndRefreshToken({ req, res });
   }
 
-  async checkUserAndRefreshToken({ req, res }) {
-    // 1. 가입확인
+  /**
+   * Set Refresh Token
+   * @param req
+   * @param res
+   */
+  async checkUserAndRefreshToken({
+    req,
+    res,
+  }: {
+    req: Request & IOAuthUser;
+    res: Response;
+  }) {
+    // Check User Info
     let user = await this.userService.findOneByEmail({
       email: req.user.email,
       provider: req.user.provider,
     });
 
-    // 2. 회원가입
+    // Create User Info
     if (!user) {
       const createUserInput = {
         name: req.user.name,
@@ -65,7 +97,7 @@ export class AuthController {
       user = await this.userService.create({ createUserInput });
     }
 
-    // 3. 로그인
+    // Login
     this.authService.setRefreshToken({ user, req, res });
 
     res.redirect(process.env.SOCIAL_REDIRECT_URL);

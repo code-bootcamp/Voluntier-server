@@ -9,6 +9,11 @@ import { UpdateBoardInput } from './dto/updateBoard.input';
 import { Board } from './entities/board.entity';
 import { Cache } from 'cache-manager';
 
+/**
+ * Board GraphQL API Resolver
+ * @APIs `fetchBoard`, `fetchBoards`, `fetchBoardsAll`, `fetchBoardsOfUser`,
+ * `fetchBoardsNearDeadline`, `fetchBoardsCount`, `createBoard`, `updateBoard`, `deleteBoard`
+ */
 @Resolver()
 export class BoardResolver {
   constructor(
@@ -19,6 +24,12 @@ export class BoardResolver {
     private readonly cacheManager: Cache,
   ) {}
 
+  /**
+   * Fetch certain Board API
+   * @type [`Query`]
+   * @param boardId ID of Board
+   * @returns `Board`
+   */
   @Query(() => Board)
   async fetchBoard(
     @Args('boardId') boardId: string, //
@@ -28,6 +39,15 @@ export class BoardResolver {
     return await this.boardService.findOne({ boardId });
   }
 
+  /**
+   * Fetch All Boards with search options API
+   * @type [`Query`]
+   * @param search Search keyword of title(ex. `강아지`)
+   * @param location1 Search location(ex. `서울특별시`)
+   * @param location2 Search location detail(ex. `구로구`)
+   * @param page Search page number(ex. `1`)
+   * @returns `[Board]`
+   */
   @Query(() => [Board])
   async fetchBoards(
     @Args('search', { nullable: true }) search: string, //
@@ -35,8 +55,8 @@ export class BoardResolver {
     @Args('location2', { nullable: true }) location2: string,
     @Args('page', { type: () => Int, nullable: true, defaultValue: 1 })
     page: number,
-  ) {
-    // 0. 검색어 없으면 MySQL 조회
+  ): Promise<Board[]> {
+    // Search MySQL
     if (search === undefined) {
       return await this.boardService.findAll({
         search,
@@ -48,7 +68,7 @@ export class BoardResolver {
 
     // ==========================================
 
-    // 1. Redis 조회
+    // Redis Search
     const resultBoards = [];
 
     let searchKey = '';
@@ -65,11 +85,8 @@ export class BoardResolver {
 
     searchKey += `:${page}`;
 
-    const searchCache = await this.cacheManager.get(searchKey);
+    const searchCache = await this.cacheManager.get<Board[]>(searchKey);
 
-    // ==========================================
-
-    // 2. Redis 캐시 반환
     if (searchCache) {
       for (let i = 0; i < searchCache.length; i++) {
         searchCache[i]['serviceDate'] = new Date(searchCache[i]['serviceDate']);
@@ -80,14 +97,14 @@ export class BoardResolver {
             ? null
             : new Date(searchCache[i]['deletedAt']);
       }
-      console.log('🔴 On Redis: Data Exist');
+      console.log('🔴 On Redis: Cache hit');
       return searchCache;
     }
 
     // ==========================================
 
-    // 3. ElasticSearch 조회
-    console.log('🔴 On Redis: No Data');
+    // Search ElasticSearch
+    console.log('🔴 On Redis: Cache miss');
 
     const elasticQuery = [];
 
@@ -164,23 +181,30 @@ export class BoardResolver {
 
     // ==========================================
 
-    // 4. Redis에 캐시 저장
+    // Save Redis
     if (resultBoards.length !== 0 && searchKey !== '') {
       console.log('🔴 On Redis: Cache Saved');
       await this.cacheManager.set(searchKey, resultBoards, { ttl: 10 });
     }
 
-    // ==========================================
-
-    // 5. 결과 반환
     return resultBoards;
   }
 
+  /**
+   * Fetch All Boards before end API
+   * @type [`Query`]
+   * @returns `[Board]`
+   */
   @Query(() => [Board])
   async fetchBoardsAll() {
     return await this.boardService.findAllBeforeEnd();
   }
 
+  /**
+   * Fetch All Boards of login user API
+   * @type [`Query`]
+   * @returns `[Board]`
+   */
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => [Board])
   async fetchBoardsOfUser(
@@ -189,6 +213,13 @@ export class BoardResolver {
     return await this.boardService.findAllOfUser({ userId: currentUser.id });
   }
 
+  /**
+   * Fetch All Boards near deadline API
+   * @type [`Query`]
+   * @param location1 Search location(ex. `서울특별시`)
+   * @param location2 Search location detail(ex. `구로구`)
+   * @returns `[Board]`
+   */
   @Query(() => [Board])
   async fetchBoardsNearDeadline(
     @Args('location1', { nullable: true }) location1: string, //
@@ -200,6 +231,13 @@ export class BoardResolver {
     });
   }
 
+  /**
+   * Fetch All Boards count API
+   * @type [`Query`]
+   * @param location1 Search location(ex. `서울특별시`)
+   * @param location2 Search location detail(ex. `구로구`)
+   * @returns `Board` count
+   */
   @Query(() => Int)
   async fetchBoardsCount(
     @Args('search', { nullable: true }) search: string, //
@@ -247,6 +285,12 @@ export class BoardResolver {
     return boards.count;
   }
 
+  /**
+   * Create Board API
+   * @type [`Mutation`]
+   * @param createBoardInput input type of createBoard
+   * @returns `Board`
+   */
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Board)
   async createBoard(
@@ -259,6 +303,12 @@ export class BoardResolver {
     });
   }
 
+  /**
+   * Update Board API
+   * @type [`Mutation`]
+   * @param createBoardInput input type of updateBoard
+   * @returns `Board`
+   */
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Board)
   async updateBoard(
@@ -275,6 +325,12 @@ export class BoardResolver {
     });
   }
 
+  /**
+   * Delete Board API
+   * @type [`Mutation`]
+   * @param createBoardInput input type of updateBoard
+   * @returns delete result(`true`, `false`)
+   */
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Boolean)
   async deleteBoard(
