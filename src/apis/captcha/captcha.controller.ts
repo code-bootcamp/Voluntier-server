@@ -1,16 +1,22 @@
 import { Controller, Get, Req, Res } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import * as request from 'request';
 import * as fs from 'fs';
 
+/**
+ * Captcha REST API Controller
+ * @APIs `getCaptchaKey`, `getCaptchaImage`, `getCaptchaResult`
+ */
 @Controller()
 export class CaptchaController {
-  constructor(private readonly configService: ConfigService) {}
-
   client_id = process.env.NAVER_CLIENT_ID;
   client_secret = process.env.NAVER_CLIENT_SECRET;
 
+  /**
+   * Get Captcha Key REST API
+   * @type [`GET`]
+   * @endPoint `/captcha/nKey`
+   */
   @Get('/captcha/nKey')
   async getCaptchaKey(
     @Req() req: Request, //
@@ -39,6 +45,12 @@ export class CaptchaController {
     });
   }
 
+  /**
+   * Get Captcha Image REST API
+   * @type [`GET`]
+   * @endPoint `/captcha/image`
+   * @param key Key of Captcha(ex. .../captcha/image?key=`UIrWUl90WXWGua2H`)
+   */
   @Get('/captcha/image')
   async getCaptchaImage(
     @Req() req: Request, //
@@ -65,6 +77,13 @@ export class CaptchaController {
     _req.pipe(res); // 브라우저로 출력
   }
 
+  /**
+   * Get Captcha Result REST API
+   * @type [`GET`]
+   * @endPoint `/captcha/result`
+   * @param key Key of Captcha(ex. .../captcha/result?key=`UIrWUl90WXWGua2H`)
+   * @param value Value of Captcha Image(ex. .../captcha/result?key=~&value=`gN2YB`)
+   */
   @Get('/captcha/result')
   async getCaptchaResult(
     @Req() req: Request, //

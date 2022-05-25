@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"0@underscore":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/0/-/0-0.0.0.tgz#beabacb0a099c1dd215eaec15bb201318db7de6a"
+  integrity sha512-MDyEAJPNr2B9fKHdpmTRgGDNSnQvxSVr0FmXkhqWmhdqKoKvUpK+yTrM5mw2jULlNrhKPwnlMQsvUjC7pAuOmQ==
+
 "@ampproject/remapping@^2.1.0":
   version "2.2.0"
   resolved "https://registry.npmjs.org/@ampproject/remapping/-/remapping-2.2.0.tgz"
@@ -1161,6 +1166,11 @@
   dependencies:
     "@types/connect" "*"
     "@types/node" "*"
+
+"@types/cache-manager@^3.4.3":
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/@types/cache-manager/-/cache-manager-3.4.3.tgz#eba99bf795b997ad0c309658101398c34d7faecb"
+  integrity sha512-71aBXoFYXZW4TnDHHH8gExw2lS28BZaWeKefgsiJI7QYZeJfUEbMKw6CQtzGjlYQcGIWwB76hcCrkVA3YHSvsw==
 
 "@types/caseless@*":
   version "0.12.2"
@@ -6461,6 +6471,13 @@ tree-kill@1.2.2:
   version "1.2.2"
   resolved "https://registry.npmjs.org/tree-kill/-/tree-kill-1.2.2.tgz"
   integrity sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==
+
+tree@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/tree/-/tree-0.1.3.tgz#14fba573d7853009c4ccef44f7409fac7162938f"
+  integrity sha1-FPulc9eFMAnEzO9E90CfrHFik48=
+  dependencies:
+    "0" underscore
 
 ts-jest@^27.0.3:
   version "27.1.4"

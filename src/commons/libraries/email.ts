@@ -9,6 +9,14 @@ export function getTemplate({
   day,
   amount,
   imgList,
+}: {
+  name: string;
+  lastMonth: number;
+  year: number;
+  month: number;
+  day: number;
+  amount: number;
+  imgList: string;
 }) {
   return `
   <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -550,5 +558,5 @@ export async function sendTemplateToEmail({ users, wallpapers }) {
     );
   }
 
-  console.log('메일 전송 완료');
+  console.log(new Date(), '정기메일 전송 완료');
 }

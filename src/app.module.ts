@@ -50,11 +50,11 @@ import { WallpaperModule } from './apis/wallpaper/wallpaper.module';
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DATABASE_HOST, // (1) Local: 'my-database' , (2) Cloud: 'database.voluntier.site'
+      host: process.env.DATABASE_HOST,
       port: 3306,
       username: 'root',
       password: 'root',
-      database: process.env.DATABASE, // (1) Local: 'mydocker02' , (2) Cloud: 'voluntier'
+      database: process.env.DATABASE,
       entities: [__dirname + '/apis/**/*.entity.*'],
       timezone: '-09:00', // 한국 기준
       synchronize: true,
