@@ -8,6 +8,9 @@ import { Dibs } from './entity/dibs.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Dibs, User, Product])],
-  providers: [DibsService, DibsResolver],
+  providers: [
+    DibsResolver, //
+    DibsService,
+  ],
 })
 export class DibsModule {}

@@ -15,7 +15,6 @@ export class JwtKakaoStrategy extends PassportStrategy(KakaoStrategy, 'kakao') {
 
   validate(accessToken: string, refreshToken: string, profile: any) {
     return {
-      // 카카오에서 넘겨주지 않는 값은 default로 저장
       name: !profile.displayName
         ? process.env.DEFAULT_NAME
         : profile.displayName,

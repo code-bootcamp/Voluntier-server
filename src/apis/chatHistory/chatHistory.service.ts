@@ -3,6 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChatHistory } from './entities/chatHistory.entity';
 
+/**
+ * Chat History Service
+ */
 @Injectable()
 export class ChatHistoryService {
   constructor(
@@ -10,28 +13,16 @@ export class ChatHistoryService {
     private readonly chatHistoryRepository: Repository<ChatHistory>,
   ) {}
 
+  /**
+   * Find All Chat History
+   * @param boardId ID of Board
+   * @returns `[ChatHistory]`
+   */
   async findAll({ boardId }: { boardId: string }) {
     return await this.chatHistoryRepository.find({
       order: { createdAt: 'ASC' },
       where: { board: { id: boardId } },
       relations: ['board', 'user'],
     });
-  }
-
-  async create({
-    userId,
-    boardId,
-    message,
-  }: {
-    userId: string;
-    boardId: string;
-    message: string;
-  }) {
-    const result = await this.chatHistoryRepository.save({
-      user: { id: userId },
-      board: { id: boardId },
-      message: message,
-    });
-    return result;
   }
 }

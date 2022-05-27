@@ -4,8 +4,12 @@ import { ICurrentUser } from 'src/commons/auth/gql-user.param';
 import { Connection, Repository } from 'typeorm';
 import { Product } from '../product/entities/product.entity';
 import { User } from '../user/entities/user.entity';
+import { CreatePurchaseInput } from './dto/createPurchase.input';
 import { Purchase } from './entities/purchase.entity';
 
+/**
+ * Purchase Service
+ */
 @Injectable()
 export class PurchaseService {
   constructor(
@@ -20,58 +24,67 @@ export class PurchaseService {
     private readonly connection: Connection,
   ) {}
 
-  async create({ createPurchaseInput }: { createPurchaseInput: any }) {
-    const queryRunner = await this.connection.createQueryRunner();
+  /**
+   * Create Purchase
+   * @param createPurchaseInput 구매내역에 들어갈 정보들
+   * @returns `Purchase`
+   */
+  async create({
+    createPurchaseInput,
+  }: {
+    createPurchaseInput: CreatePurchaseInput;
+  }) {
+    const queryRunner = this.connection.createQueryRunner();
     await queryRunner.connect();
-    //transaction 시작!
+
     await queryRunner.startTransaction('READ COMMITTED');
     try {
       const { productId, userId, ...purchase } = createPurchaseInput;
-      // 받아온 상품 정보 받아오기
+
       const itemInfo = await this.productRepository.findOne({
         id: productId,
       });
-      // 결제되야할 금액 계산
+
       const usedPoint = itemInfo.price * purchase.itemCount;
 
-      // 유저 포인트 확인
       const userInfo = await this.userRepository.findOne({
         id: userId,
       });
       const userPoint = userInfo.point;
 
-      // 유저 포인트가 적을경우 에러
       if (usedPoint > userPoint) {
         throw new UnprocessableEntityException('잔여 포인트가 부족합니다.');
       }
 
-      // 유저 포인트가 충분할 경우 유저 포인트 수정.
-      const updatedUser = await this.userRepository.create({
+      const updatedUser = this.userRepository.create({
         ...userInfo,
         point: userPoint - usedPoint,
       });
       await queryRunner.manager.save(updatedUser);
 
-      // 결과 저장 후 리턴
-      const result = await this.purchaseRepository.create({
+      const result = this.purchaseRepository.create({
         ...purchase,
         usedPoint,
         product: { id: productId },
         user: { id: userId },
-        relations: ['product', 'user'],
       });
       await queryRunner.manager.save(result);
       await queryRunner.commitTransaction();
+
       return result;
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;
     } finally {
-      //연결 해제
       await queryRunner.release();
     }
   }
 
+  /**
+   * Find all Purchases of User
+   * @param currentUser 현재 접속한 유저의 정보
+   * @returns `[Purchase]`
+   */
   async findAll({ currentUser }: { currentUser: ICurrentUser }) {
     return await this.purchaseRepository.find({
       where: { user: { id: currentUser.id } },
@@ -80,40 +93,38 @@ export class PurchaseService {
     });
   }
 
+  /**
+   * Cancel Purchase
+   * @param purchaseId 구매취소할 구매내역의 ID
+   * @returns `Purchase`
+   */
   async cancel({ purchaseId }: { purchaseId: string }) {
-    const queryRunner = await this.connection.createQueryRunner();
+    const queryRunner = this.connection.createQueryRunner();
     await queryRunner.connect();
 
-    // transaction 시작!!
     await queryRunner.startTransaction();
     try {
-      // 결제 정보 가져오기
       const purchase = await this.purchaseRepository.findOne({
         where: { id: purchaseId },
         relations: ['product', 'user'],
         withDeleted: true,
       });
 
-      // 이미 취소된 결제일경우 에러
       if (purchase.cancelledAt) {
         throw new UnprocessableEntityException('이미 취소된 결제입니다.');
       }
 
-      // 포인트 사용 기록 삭제
       await queryRunner.manager.getRepository(Purchase).softDelete(purchaseId);
 
-      // 포인트 돌려주기
       const user = await this.userRepository.findOne({
         id: purchase.user.id,
       });
 
-      const updatedUser = await this.userRepository.create({
+      const updatedUser = this.userRepository.create({
         ...user,
         point: user.point + purchase.usedPoint,
       });
       await queryRunner.manager.save(updatedUser);
-
-      //취소된 거래 내역 프론트에 전달
 
       const cancelledPurchase = await this.purchaseRepository.findOne({
         where: { id: purchaseId },
@@ -121,6 +132,7 @@ export class PurchaseService {
       });
 
       await queryRunner.commitTransaction();
+
       return cancelledPurchase;
     } catch (error) {
       await queryRunner.rollbackTransaction();

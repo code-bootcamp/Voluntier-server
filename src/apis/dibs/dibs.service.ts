@@ -4,6 +4,9 @@ import { ICurrentUser } from 'src/commons/auth/gql-user.param';
 import { Repository } from 'typeorm';
 import { Dibs } from './entity/dibs.entity';
 
+/**
+ * Dibs Service
+ */
 @Injectable()
 export class DibsService {
   constructor(
@@ -11,6 +14,12 @@ export class DibsService {
     private readonly dibsRepository: Repository<Dibs>,
   ) {}
 
+  /**
+   * Create Dibs
+   * @param currentUser User
+   * @param productId ID of Product
+   * @returns `Dibs`
+   */
   async create({
     currentUser,
     productId,
@@ -37,6 +46,12 @@ export class DibsService {
     });
   }
 
+  /**
+   * Delete Dibs
+   * @param currentUser User
+   * @param productId ID of Product
+   * @returns delete result(`true`, `false`)
+   */
   async delete({
     currentUser,
     productId,
@@ -51,6 +66,11 @@ export class DibsService {
     return result.affected ? true : false;
   }
 
+  /**
+   * Find All Dibs of User
+   * @param currentUser User
+   * @returns `[Dibs]`
+   */
   async getLogInUserDibs({ currentUser }: { currentUser: ICurrentUser }) {
     return await this.dibsRepository.find({
       where: { user: { id: currentUser.id } },

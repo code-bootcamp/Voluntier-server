@@ -1,8 +1,3 @@
-// 후원 내역 id
-// 유저 id
-// 후원금액
-// 생성일자
-
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { User } from 'src/apis/user/entities/user.entity';
 import {

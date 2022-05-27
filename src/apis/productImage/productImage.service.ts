@@ -5,19 +5,33 @@ import { CreateProductImageInput } from './dto/createProductImage.input';
 import { UpdateProductImageInput } from './dto/updateProductImage.input';
 import { ProductImage } from './entities/productImage.entity';
 
+/**
+ * Product Image Service
+ */
 @Injectable()
 export class ProductImageService {
   constructor(
     @InjectRepository(ProductImage)
     private readonly productImageRepository: Repository<ProductImage>,
   ) {}
-  async findAll({ productId }) {
+
+  /**
+   * Find all Product Images
+   * @param productId ID of Product
+   * @returns `[ProductImage]`
+   */
+  async findAll({ productId }: { productId: string }) {
     return await this.productImageRepository.find({
       where: { product: { id: productId } },
       relations: ['product'],
     });
   }
 
+  /**
+   * Find one Product Image
+   * @param productId ID of Product
+   * @returns `ProductImage`
+   */
   async findOne({ productId }: { productId: string }) {
     return await this.productImageRepository.findOne({
       where: { product: { id: productId } },
@@ -25,6 +39,11 @@ export class ProductImageService {
     });
   }
 
+  /**
+   * Update Product Images
+   * @param updateProductImageInput 이미지를 수정할 상품의 ID와 url
+   * @returns `[ProductImage]`
+   */
   async update({
     updateProductImageInput,
   }: {
@@ -37,7 +56,6 @@ export class ProductImageService {
 
     const dbImageList2 = dbImageList.map((el) => el.imageUrl);
 
-    // 새로 추가된 이미지가 아닐경우 삭제.
     await Promise.all(
       dbImageList2.map((el) => {
         if (!imageList.imageUrl.includes(el)) {
@@ -50,13 +68,11 @@ export class ProductImageService {
       }),
     );
 
-    // db에 저장되지 않은 이미지일 경우 db에 저장
     await Promise.all(
       imageList.imageUrl.map(async (el) => {
         const checker = await this.productImageRepository.find({
           where: { product: { id: productId }, imageUrl: el },
         });
-        console.log(checker.length, 'this is checker');
         if (!checker.length) {
           return this.productImageRepository.save({
             product: { id: productId },
@@ -67,13 +83,17 @@ export class ProductImageService {
       }),
     );
 
-    // 현재 저장되어있는 이미url리스트 리턴
     return await this.productImageRepository.find({
       where: { product: { id: productId } },
       relations: ['product'],
     });
   }
 
+  /**
+   * Delete Product Image
+   * @param productImageId 삭제할 이미지의 ID
+   * @returns delete result(`true`, `false`)
+   */
   async delete({ productImageId }: { productImageId: string }) {
     const result = await this.productImageRepository.softDelete({
       id: productImageId,
@@ -81,16 +101,22 @@ export class ProductImageService {
     return result.affected ? true : false;
   }
 
+  /**
+   * Create Product Image
+   * @param createProductImageInput 이미지를 등록할 상품의 ID와 url
+   * @returns `ProductImage`
+   */
   async create({
     createProductImageInput,
   }: {
     createProductImageInput: CreateProductImageInput;
   }) {
     const { productId, ...productImage } = createProductImageInput;
-    return await this.productImageRepository.save({
+    const result: ProductImage = await this.productImageRepository.save({
       ...productImage,
       product: { id: productId },
       relations: ['product'],
     });
+    return result;
   }
 }

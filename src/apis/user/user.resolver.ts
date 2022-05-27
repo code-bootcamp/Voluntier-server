@@ -167,6 +167,6 @@ export class UserResolver {
       phone: phone,
       isAuth: false,
     });
-    await this.userService.resetPassword({ userId: user.id, password });
+    return await this.userService.resetPassword({ userId: user.id, password });
   }
 }

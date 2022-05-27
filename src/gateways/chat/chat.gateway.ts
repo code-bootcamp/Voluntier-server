@@ -6,9 +6,8 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { ChatSerivce } from './chat.service';
+import { ChatService } from './chat.service';
 
-// 채팅 필터링용 정규표현식 생성
 import * as fs from 'fs';
 const list = fs.readFileSync('src/gateways/chat/list.txt', 'utf8').split(',');
 let reStr = '';
@@ -30,7 +29,7 @@ const re = new RegExp(reStr, 'g');
 })
 export class ChatGateway {
   constructor(
-    private readonly chatService: ChatSerivce, //
+    private readonly chatService: ChatService, //
   ) {}
   @WebSocketServer()
   server;
@@ -38,11 +37,14 @@ export class ChatGateway {
   @SubscribeMessage('send')
   async sendMessage(@MessageBody() data: string, @ConnectedSocket() client) {
     const [room, nickname, message, userId] = data;
-    // 채팅 필터링
+
     const filteredMessage = message.replace(re, '**');
-    console.log(message);
-    console.log(`${client.id} : ${data}`);
+    const boardUser = await this.chatService.findBoard({ boardId: room });
+    const boardUserId = boardUser.user.id;
+
     this.server.emit(room, [nickname, filteredMessage, userId]);
+    if (boardUserId !== userId)
+      this.server.emit(boardUserId, [nickname, filteredMessage, userId]);
     await this.chatService.create({ userId: userId, boardId: room, message });
   }
 }

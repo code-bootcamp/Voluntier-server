@@ -234,7 +234,7 @@ export class UserService {
    * Reset Password
    * @param userId ID of User
    * @param password password of User
-   * @returns `User`
+   * @returns result string
    */
   async resetPassword({
     userId,
@@ -254,6 +254,8 @@ export class UserService {
       password: hashedPassword,
     };
 
-    return await this.userRepository.save(newUserInfo);
+    await this.userRepository.save(newUserInfo);
+
+    return '암호 변경 완료';
   }
 }
