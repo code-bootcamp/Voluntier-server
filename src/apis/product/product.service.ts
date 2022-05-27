@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { ProductImage } from '../productImage/entities/productImage.entity';
 import { CreateProductInput } from './dto/createProduct.input';
 import { UpdateProductInput } from './dto/updateProduct.input';
@@ -138,6 +138,16 @@ export class ProductService {
     return result;
   }
 
+  async findAllWithKeyword({ keyword }: { keyword: string }) {
+    const result = await this.productRepository.find({
+      relations: ['productImage'],
+      where: {
+        name: Like(`%${keyword}%`),
+      },
+    });
+    return result;
+  }
+  
   /**
    * Find one Product
    * @param productId 정보를 가져오고 싶은 상품의 ID

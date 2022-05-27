@@ -78,4 +78,9 @@ export class ProductResolver {
   async fetchProducts() {
     return await this.productService.findAll();
   }
+
+  @Query(() => [Product])
+  fetchProductsWithKeywrod(@Args('keyword') keyword: string) {
+    return this.productService.findAllWithKeyword({ keyword });
+  }
 }

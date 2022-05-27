@@ -147,6 +147,7 @@ type Query {
   fetchEnrollsByUserId: [Enroll!]!
   fetchProduct(productId: String!): Product!
   fetchProducts: [Product!]!
+  fetchProductsWithKeywrod(keyword: String!): [Product!]!
   fetchProductImage(productId: String!): ProductImage!
   fetchProductImages(productId: String!): [ProductImage!]!
   fetchPurchases: [Purchase!]!
