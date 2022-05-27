@@ -1,7 +1,11 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 import { ChatHistoryService } from './chatHistory.service';
 import { ChatHistory } from './entities/chatHistory.entity';
 
+/**
+ * Chat History GraphQL API Resolver
+ * @APIs `fetchChatHistory`
+ */
 @Resolver()
 export class ChatHistoryResolver {
   constructor(
@@ -9,14 +13,15 @@ export class ChatHistoryResolver {
   ) {}
 
   /**
-   *
+   * Fetch Chat History of Board
+   * @type [`Query`]
    * @param boardId 채팅내역을 가져올 게시물의 ID
-   * @returns
+   * @returns `[ChatHistory]`
    */
   @Query(() => [ChatHistory])
   async fetchChatHistory(
     @Args('boardId') boardId: string, //
   ) {
-    return this.chatHistoryService.findAll({ boardId });
+    return await this.chatHistoryService.findAll({ boardId });
   }
 }

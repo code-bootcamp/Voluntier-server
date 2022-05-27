@@ -18,7 +18,6 @@ export class JwtNaverStrategy extends PassportStrategy(NaverStrategy, 'naver') {
 
   validate(accessToken: string, refreshToken: string, profile: NaverProfile) {
     return {
-      // 네이버에서 넘겨주지 않는 값은 default로 저장
       name: !profile.name ? process.env.DEFAULT_NAME : profile.name,
       email: !profile.email ? process.env.DEFAULT_EMAIL : profile.email,
       phone: !profile.mobile ? process.env.DEFAULT_PHONE : profile.mobile,

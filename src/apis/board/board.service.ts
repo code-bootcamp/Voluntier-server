@@ -63,15 +63,15 @@ export class BoardService {
 
     const whereOptions = {};
 
-    if (search !== undefined) {
+    if (search !== undefined && search !== '' && search !== null) {
       whereOptions['title'] = Like(`%${search}%`);
     }
 
-    if (location1 !== undefined) {
+    if (location1 !== undefined && location1 !== '' && location1 !== null) {
       whereOptions['location1'] = location1;
     }
 
-    if (location2 !== undefined) {
+    if (location2 !== undefined && location2 !== '' && location2 !== null) {
       whereOptions['location2'] = location2;
     }
 
@@ -85,7 +85,6 @@ export class BoardService {
    * @returns `[Board]`
    */
   async findAllBeforeEnd() {
-    //const now = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss Z'); // 한국 기준 시간
     const now = new Date();
     now.setHours(now.getHours() + 9);
 
@@ -138,17 +137,54 @@ export class BoardService {
 
     const whereOptions = {};
 
-    if (location1 !== undefined) {
+    if (location1 !== undefined && location1 !== '' && location1 !== null) {
       whereOptions['location1'] = location1;
     }
 
-    if (location2 !== undefined) {
+    if (location2 !== undefined && location2 !== '' && location2 !== null) {
       whereOptions['location2'] = location2;
     }
 
     options['where'] = whereOptions;
 
     return await this.boardRepository.find(options);
+  }
+
+  /**
+   * Find All Boards Count
+   * @param search Search keyword of title(ex. `강아지`)
+   * @param location1 Search location(ex. `서울특별시`)
+   * @param location2 Search location detail(ex. `구로구`)
+   * @returns result count
+   */
+  async findAllCount({
+    search,
+    location1,
+    location2,
+  }: {
+    search: string;
+    location1: string;
+    location2: string;
+  }) {
+    const options: FindManyOptions<Board> = {};
+
+    const whereOptions = {};
+
+    if (search !== undefined && search !== '' && search !== null) {
+      whereOptions['title'] = Like(`%${search}%`);
+    }
+
+    if (location1 !== undefined && location1 !== '' && location1 !== null) {
+      whereOptions['location1'] = location1;
+    }
+
+    if (location2 !== undefined && location2 !== '' && location2 !== null) {
+      whereOptions['location2'] = location2;
+    }
+
+    options['where'] = whereOptions;
+
+    return await this.boardRepository.count(options);
   }
 
   /**

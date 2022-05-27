@@ -40,7 +40,6 @@
       });
 
       function msg_send() {
-        /* 메시지 전송 */
         let message = $('#msg').val();
         socket.emit('send', room, nickname, message, userId);
         $('#msg').val('');
@@ -49,6 +48,10 @@
       $(document).ready(() => {
         $('#room').text(`${room}`);
       });
+
+      function disconnect() {
+        socket.disconnect();
+      }
     </script>
   </head>
   <body>
@@ -63,6 +66,7 @@
         onKeyPress="if( event.keyCode==13 ){msg_send();}"
       />
       <button onclick="msg_send()">제출</button>
+      <button onclick="disconnect()">연결끊기</button>
     </div>
   </body>
 </html>

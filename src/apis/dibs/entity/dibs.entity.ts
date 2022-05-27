@@ -10,12 +10,10 @@ export class Dibs {
   @Field(() => String)
   id: string;
 
-  // 유저 id
   @ManyToOne(() => User)
   @Field(() => User)
   user: User;
 
-  // 상품 id
   @ManyToOne(() => Product)
   @Field(() => Product)
   product: Product;

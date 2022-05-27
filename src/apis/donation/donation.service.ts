@@ -14,9 +14,11 @@ import {
 import axios from 'axios';
 import { ICurrentUser } from 'src/commons/auth/gql-user.param';
 
-// 후원 : 포인트 비율
 const POINT_PERCENTAGE = 0.1;
 
+/**
+ * Donation Service
+ */
 @Injectable()
 export class DonationService {
   constructor(
@@ -30,6 +32,14 @@ export class DonationService {
 
     private readonly connection: Connection,
   ) {}
+
+  /**
+   * Create Donation
+   * @param impUid 결제 완료후 iamport로 부터 받은 impUid
+   * @param amount 결제한 금액
+   * @param currentUser 현재 접속한 유저
+   * @returns `Donation`
+   */
   async create({
     impUid,
     amount,
@@ -39,10 +49,9 @@ export class DonationService {
     amount: number;
     currentUser: ICurrentUser;
   }) {
-    const queryRunner = await this.connection.createQueryRunner();
+    const queryRunner = this.connection.createQueryRunner();
     await queryRunner.connect();
 
-    //transaction 시작!
     await queryRunner.startTransaction('READ COMMITTED');
 
     try {
@@ -58,8 +67,7 @@ export class DonationService {
       const isDouble = await this.iamportService.checkDouble({ impUid });
       if (isDouble) throw new ConflictException('중복 결제건 입니다.');
 
-      // 1. pointTransaction 테이블에 거래기록 1줄 생성
-      const donation = await this.donationRepository.create({
+      const donation = this.donationRepository.create({
         impUid: impUid,
         amount: amount,
         user: currentUser,
@@ -67,14 +75,12 @@ export class DonationService {
       });
       await queryRunner.manager.save(donation);
 
-      // 2. 유저의 포인트 찾아오기
       const user = await queryRunner.manager.findOne(
         User,
         { id: currentUser.id },
         { lock: { mode: 'pessimistic_write' } },
       );
 
-      // 3. 유저의 포인트, 총 후원금액 업데이트
       const updatedUser = this.userRepository.create({
         ...user,
         point: user.point + amount * POINT_PERCENTAGE,
@@ -84,18 +90,21 @@ export class DonationService {
 
       await queryRunner.commitTransaction();
 
-      // 4. 최종결과 프론트엔드에 돌려주기
       return donation;
     } catch (error) {
-      //롤백!
       await queryRunner.rollbackTransaction();
       throw error;
     } finally {
-      //연결 해제
       await queryRunner.release();
     }
   }
 
+  /**
+   * Cancel Donation
+   * @param impUid 결제 완료후 iamport로 부터 받은 impUid
+   * @param currentUser 현재 접속한 유저
+   * @returns `Donation`
+   */
   async cancel({
     impUid,
     currentUser,
@@ -103,9 +112,9 @@ export class DonationService {
     impUid: string;
     currentUser: ICurrentUser;
   }) {
-    const queryRunner = await this.connection.createQueryRunner();
+    const queryRunner = this.connection.createQueryRunner();
     await queryRunner.connect();
-    //transaction 시작!
+
     await queryRunner.startTransaction('READ COMMITTED');
     try {
       const donation = await queryRunner.manager.findOne(
@@ -114,7 +123,6 @@ export class DonationService {
         { lock: { mode: 'pessimistic_write' } },
       );
 
-      //만약 cancelledAt 데이터가 null이 아니라면 이미 취소된 결제, 에러 반환
       if (donation.cancelledAt)
         throw new UnprocessableEntityException('이미 취소된 결제입니다.');
 
@@ -124,33 +132,31 @@ export class DonationService {
         { lock: { mode: 'pessimistic_write' } },
       );
 
-      // 현재 보유한 포인트 확인. 모자랄경우 에러 반환
       if (userInfo.point < donation.amount * POINT_PERCENTAGE)
         throw new UnprocessableEntityException('환불할 포인트가 부족합니다.');
 
-      // 인증토큰 받아오기
       const getToken = await axios({
         url: 'https://api.iamport.kr/users/getToken',
-        method: 'post', // POST method
-        headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
         data: {
-          imp_key: process.env.IMPORT_API_KEY, // REST API키
-          imp_secret: process.env.IMPORT_API_SECRET, // REST API Secret
+          imp_key: process.env.IMPORT_API_KEY,
+          imp_secret: process.env.IMPORT_API_SECRET,
         },
       });
-      const { access_token } = getToken.data.response; // 인증토큰
+      const { access_token } = getToken.data.response;
 
       const getCancelData = await axios({
         url: 'https://api.iamport.kr/payments/cancel',
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: access_token, // 아임포트 서버로부터 발급받은 엑세스 토큰
+          Authorization: access_token,
         },
         data: {
-          reasos: '테스트', // 가맹점 클라이언트로부터 받은 환불사유
-          imp_uid: impUid, // imp_uid를 환불 `unique key`로 입력
-          amount: donation.amount, // 가맹점 클라이언트로부터 받은 환불금액
+          reason: 'Cancel',
+          imp_uid: impUid,
+          amount: donation.amount,
         },
       });
       const { response } = getCancelData.data;
@@ -158,14 +164,12 @@ export class DonationService {
         throw new UnprocessableEntityException('이미 취소된 결제입니다.');
       }
 
-      // 기존에 있는 데이터 취소 날짜 적어주기
       const updatedDonation = this.donationRepository.create({
         ...donation,
         cancelledAt: new Date(),
       });
       await queryRunner.manager.save(updatedDonation);
 
-      // 새로운 포인트 결제 데이터 추가해주기
       const newDonation = this.donationRepository.create({
         impUid: impUid,
         amount: response.cancel_amount * -1,
@@ -174,7 +178,6 @@ export class DonationService {
       });
       await queryRunner.manager.save(newDonation);
 
-      //유저의 기부 총액 줄이기
       const newUser = this.userRepository.create({
         ...userInfo,
         donationAmount: userInfo.donationAmount - donation.amount,
@@ -192,8 +195,12 @@ export class DonationService {
     }
   }
 
+  /**
+   * Find Donations of User
+   * @param currentUser 현재 접속한 유저
+   * @returns `[Donation]`
+   */
   async findAll({ currentUser }: { currentUser: ICurrentUser }) {
-    // 여태까지 기부한 내역 불러오기
     const result = await this.donationRepository.find({
       user: { id: currentUser.id },
     });
@@ -201,11 +208,20 @@ export class DonationService {
     return result;
   }
 
+  /**
+   * Find Donation Amount of User
+   * @param currentUser 현재 접속한 유저
+   * @returns Amount of Donations
+   */
   async totalDonations({ currentUser }: { currentUser: ICurrentUser }) {
     const result = await this.userRepository.findOne({ id: currentUser.id });
     return result.donationAmount;
   }
 
+  /**
+   * Find Donation Amount of all Users
+   * @returns Amount of Donations of all Users
+   */
   async AllUsersDonations() {
     const result = await this.userRepository.find();
     let sum = 0;

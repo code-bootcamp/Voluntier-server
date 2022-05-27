@@ -4,6 +4,10 @@ import { UpdateProductInput } from './dto/updateProduct.input';
 import { Product } from './entities/product.entity';
 import { ProductService } from './product.service';
 
+/**
+ * Product GraphQL API Resolver
+ * @APIs `createProduct`, `deleteProduct`, `updateProduct`, `fetchProduct`, `fetchProducts`
+ */
 @Resolver()
 export class ProductResolver {
   constructor(
@@ -11,29 +15,32 @@ export class ProductResolver {
   ) {}
 
   /**
-   *
+   * Create Product API
+   * @type [`Mutation`]
    * @param createProductInput 생성할 상품의 정보
    * @returns 생성된 상품의 정보
    */
   @Mutation(() => Product)
-  createProduct(
+  async createProduct(
     @Args('createProductInput') createProductInput: CreateProductInput,
   ) {
-    return this.productService.create({ createProductInput });
+    return await this.productService.create({ createProductInput });
   }
 
   /**
-   *
+   * Delete Product API
+   * @type [`Mutation`]
    * @param productId 상품의 ID
-   * @returns 삭제에 성공한경우 true, 삭제되지 않은 경우 false
+   * @returns 삭제에 성공한경우 `true`, 삭제되지 않은 경우 `false`
    */
   @Mutation(() => Boolean)
-  deleteProduct(@Args('productId') productId: string) {
-    return this.productService.delete({ productId });
+  async deleteProduct(@Args('productId') productId: string) {
+    return await this.productService.delete({ productId });
   }
 
   /**
-   *
+   * Update Product API
+   * @type [`Mutation`]
    * @param productId 수정할 상품의 ID
    * @param updateProductInput 수정할 상품의 정보
    * @returns 수정된 상품의 정보
@@ -50,21 +57,25 @@ export class ProductResolver {
   }
 
   /**
-   *
+   * Fetch Product API
+   * @type [`Query`]
    * @param productId 정보를 가져오고 싶은 상품의 ID
    * @returns 상품의 정보
    */
   @Query(() => Product)
-  fetchProduct(@Args('productId') productId: string) {
-    return this.productService.findOne({ productId });
+  async fetchProduct(
+    @Args('productId') productId: string, //
+  ) {
+    return await this.productService.findOne({ productId });
   }
 
   /**
-   *
+   * Fetch all Products API
+   * @type [`Query`]
    * @returns 모든 상품의 정보
    */
   @Query(() => [Product])
-  fetchProducts() {
-    return this.productService.findAll();
+  async fetchProducts() {
+    return await this.productService.findAll();
   }
 }

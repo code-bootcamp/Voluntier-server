@@ -57,7 +57,7 @@ export class BoardResolver {
     page: number,
   ): Promise<Board[]> {
     // Search MySQL
-    if (search === undefined) {
+    if (search === undefined || search === '' || search === null) {
       return await this.boardService.findAll({
         search,
         location1,
@@ -76,10 +76,10 @@ export class BoardResolver {
     search = search.toLowerCase();
     searchKey += search;
 
-    if (location1 !== undefined) {
+    if (location1 !== undefined && location1 !== '' && location1 !== null) {
       searchKey += `:${location1}`;
     }
-    if (location2 !== undefined) {
+    if (location2 !== undefined && location2 !== '' && location2 !== null) {
       searchKey += `:${location2}`;
     }
 
@@ -108,21 +108,21 @@ export class BoardResolver {
 
     const elasticQuery = [];
 
-    if (search !== undefined) {
+    if (search !== undefined && search !== '' && search !== null) {
       elasticQuery.push({
         term: {
           title: search,
         },
       });
     }
-    if (location1 !== undefined) {
+    if (location1 !== undefined && location1 !== '' && location1 !== null) {
       elasticQuery.push({
         term: {
           location1: location1,
         },
       });
     }
-    if (location2 !== undefined) {
+    if (location2 !== undefined && location2 !== '' && location2 !== null) {
       elasticQuery.push({
         term: {
           location2: location2,
@@ -130,64 +130,74 @@ export class BoardResolver {
       });
     }
 
-    const boards = await this.elasticsearchService.search<any>({
-      index: 'board',
-      query: {
-        bool: {
-          must: elasticQuery,
-          must_not: {
-            exists: {
-              field: 'deletedat',
+    try {
+      const boards = await this.elasticsearchService.search<any>({
+        index: 'board',
+        query: {
+          bool: {
+            must: elasticQuery,
+            must_not: {
+              exists: {
+                field: 'deletedat',
+              },
             },
           },
         },
-      },
-      sort: 'createdat2:desc',
-      size: 10,
-      from: (page - 1) * 10,
-    });
+        sort: 'createdat2:desc',
+        size: 10,
+        from: (page - 1) * 10,
+      });
 
-    for (let i = 0; i < boards.hits.hits.length; i++) {
-      const board = boards.hits.hits[i]._source;
+      for (let i = 0; i < boards.hits.hits.length; i++) {
+        const board = boards.hits.hits[i]._source;
 
-      const createBoard = {
-        id: board.id,
-        user: {
-          id: board.userid,
-          name: board.username,
-        },
-        title: board.title,
-        contents: board.contents,
-        centerName: board.centername,
-        centerOwnerName: board.centerownername,
-        centerPhone: board.centerphone,
-        recruitCount: board.recruitcount,
-        serviceTime: board.servicetime,
-        serviceDate: new Date(board.servicedate * 1000 + 9 * 60 * 60 * 1000),
-        address: board.address,
-        addressDetail: board.addressdetail,
-        location1: board.location1,
-        location2: board.location2,
-        createdAt: new Date(board.createdat * 1000 + 9 * 60 * 60 * 1000),
-        updatedAt: new Date(board.updatedat * 1000 + 9 * 60 * 60 * 1000),
-        deletedAt:
-          board.delatedat === undefined
-            ? null
-            : new Date(board.deletedat * 1000 + 9 * 60 * 60 * 1000),
-      };
+        const createBoard = {
+          id: board.id,
+          user: {
+            id: board.userid,
+            name: board.username,
+          },
+          title: board.title,
+          contents: board.contents,
+          centerName: board.centername,
+          centerOwnerName: board.centerownername,
+          centerPhone: board.centerphone,
+          recruitCount: board.recruitcount,
+          serviceTime: board.servicetime,
+          serviceDate: new Date(board.servicedate * 1000 + 9 * 60 * 60 * 1000),
+          address: board.address,
+          addressDetail: board.addressdetail,
+          location1: board.location1,
+          location2: board.location2,
+          createdAt: new Date(board.createdat * 1000 + 9 * 60 * 60 * 1000),
+          updatedAt: new Date(board.updatedat * 1000 + 9 * 60 * 60 * 1000),
+          deletedAt:
+            board.delatedat === undefined
+              ? null
+              : new Date(board.deletedat * 1000 + 9 * 60 * 60 * 1000),
+        };
 
-      resultBoards.push(createBoard);
+        resultBoards.push(createBoard);
+      }
+
+      // ==========================================
+
+      // Save Redis
+      if (resultBoards.length !== 0 && searchKey !== '') {
+        console.log('🔴 On Redis: Cache Saved');
+        await this.cacheManager.set(searchKey, resultBoards, { ttl: 10 });
+      }
+
+      return resultBoards;
+    } catch (error) {
+      console.log('🟢 On Elastic: Could not Search');
+      return await this.boardService.findAll({
+        search,
+        location1,
+        location2,
+        page,
+      });
     }
-
-    // ==========================================
-
-    // Save Redis
-    if (resultBoards.length !== 0 && searchKey !== '') {
-      console.log('🔴 On Redis: Cache Saved');
-      await this.cacheManager.set(searchKey, resultBoards, { ttl: 10 });
-    }
-
-    return resultBoards;
   }
 
   /**
@@ -244,23 +254,31 @@ export class BoardResolver {
     @Args('location1', { nullable: true }) location1: string,
     @Args('location2', { nullable: true }) location2: string,
   ) {
+    if (search === undefined || search === '' || search === null) {
+      return await this.boardService.findAllCount({
+        search,
+        location1,
+        location2,
+      });
+    }
+
     const elasticQuery = [];
 
-    if (search !== undefined) {
+    if (search !== undefined && search !== '' && search !== null) {
       elasticQuery.push({
         term: {
           title: search,
         },
       });
     }
-    if (location1 !== undefined) {
+    if (location1 !== undefined && location1 !== '' && location1 !== null) {
       elasticQuery.push({
         term: {
           location1: location1,
         },
       });
     }
-    if (location2 !== undefined) {
+    if (location2 !== undefined && location2 !== '' && location2 !== null) {
       elasticQuery.push({
         term: {
           location2: location2,
@@ -268,21 +286,29 @@ export class BoardResolver {
       });
     }
 
-    const boards = await this.elasticsearchService.count({
-      index: 'board',
-      query: {
-        bool: {
-          must: elasticQuery,
-          must_not: {
-            exists: {
-              field: 'deletedat',
+    try {
+      const boards = await this.elasticsearchService.count({
+        index: 'board',
+        query: {
+          bool: {
+            must: elasticQuery,
+            must_not: {
+              exists: {
+                field: 'deletedat',
+              },
             },
           },
         },
-      },
-    });
-
-    return boards.count;
+      });
+      return boards.count;
+    } catch (error) {
+      console.log('🟢 On Elastic: Could not Search');
+      return await this.boardService.findAllCount({
+        search,
+        location1,
+        location2,
+      });
+    }
   }
 
   /**
