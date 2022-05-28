@@ -1291,6 +1291,57 @@ export function getTemplate({
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: 'Montserrat', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <table
+                                  width="100%"
+                                  cellpadding="0"
+                                  cellspacing="0"
+                                  border="0"
+                                >
+                                  <tr>
+                                    <td
+                                      style="
+                                        padding-right: 0px;
+                                        padding-left: 0px;
+                                      "
+                                      align="center"
+                                    >
+                                      <img
+                                        align="center"
+                                        border="0"
+                                        src="https://storage.googleapis.com/team-project-image-storage/product8.png"
+                                        alt=""
+                                        title=""
+                                        style="
+                                          outline: none;
+                                          text-decoration: none;
+                                          -ms-interpolation-mode: bicubic;
+                                          clear: both;
+                                          display: inline-block !important;
+                                          border: none;
+                                          height: auto;
+                                          float: none;
+                                          width: 100%;
+                                          max-width: 208px;
+                                        "
+                                        width="208"
+                                        class="v-src-width v-src-max-width"
+                                      />
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
 
@@ -1383,104 +1434,7 @@ export function getTemplate({
                   </div>
                   <!--[if (mso)|(IE)]></td><![endif]-->
                   <!--[if (mso)|(IE)]><td align="center" width="300" style="width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-                  <div
-                    class="u-col u-col-50"
-                    style="
-                      max-width: 320px;
-                      min-width: 300px;
-                      display: table-cell;
-                      vertical-align: top;
-                    "
-                  >
-                    <div
-                      style="
-                        width: 100% !important;
-                        border-radius: 0px;
-                        -webkit-border-radius: 0px;
-                        -moz-border-radius: 0px;
-                      "
-                    >
-                      <!--[if (!mso)&(!IE)]><!--><div
-                        style="
-                          padding: 0px;
-                          border-top: 0px solid transparent;
-                          border-left: 0px solid transparent;
-                          border-right: 0px solid transparent;
-                          border-bottom: 0px solid transparent;
-                          border-radius: 0px;
-                          -webkit-border-radius: 0px;
-                          -moz-border-radius: 0px;
-                        "
-                      ><!--<![endif]-->
-                        <table
-                          id="u_content_image_3"
-                          style="font-family: 'Montserrat', sans-serif"
-                          role="presentation"
-                          cellpadding="0"
-                          cellspacing="0"
-                          width="100%"
-                          border="0"
-                        >
-                          <tbody>
-                            <tr>
-                              <td
-                                class="v-container-padding-padding"
-                                style="
-                                  overflow-wrap: break-word;
-                                  word-break: break-word;
-                                  padding: 70px 10px 10px 0px;
-                                  font-family: 'Montserrat', sans-serif;
-                                "
-                                align="left"
-                              >
-                                <table
-                                  width="100%"
-                                  cellpadding="0"
-                                  cellspacing="0"
-                                  border="0"
-                                >
-                                  <tr>
-                                    <td
-                                      style="
-                                        padding-right: 0px;
-                                        padding-left: 0px;
-                                      "
-                                      align="center"
-                                    >
-                                      <img
-                                        align="center"
-                                        border="0"
-                                        src="https://storage.googleapis.com/team-project-image-storage/product8.png"
-                                        alt=""
-                                        title=""
-                                        style="
-                                          outline: none;
-                                          text-decoration: none;
-                                          -ms-interpolation-mode: bicubic;
-                                          clear: both;
-                                          display: inline-block !important;
-                                          border: none;
-                                          height: auto;
-                                          float: none;
-                                          width: 100%;
-                                          max-width: 208px;
-                                        "
-                                        width="208"
-                                        class="v-src-width v-src-max-width"
-                                      />
-                                    </td>
-                                  </tr>
-                                </table>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
 
-                        <!--[if (!mso)&(!IE)]><!-->
-                      </div>
-                      <!--<![endif]-->
-                    </div>
-                  </div>
                   <!--[if (mso)|(IE)]></td><![endif]-->
                   <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
                 </div>

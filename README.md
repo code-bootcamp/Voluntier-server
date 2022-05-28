@@ -238,3 +238,4 @@ yarn install
 
 > 소셜로그인 가입시 디폴트 정보  
 > DEFAULT_NAME, DEFAULT_EMAIL, DEFAULT_PHONE, DEFAULT_PASSWORD
+

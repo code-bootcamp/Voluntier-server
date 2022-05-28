@@ -222,7 +222,9 @@ export class UserService {
       .where(
         'MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) = MONTH(wallpaper.createdAt)',
       )
-      .orderBy('wallpaper.createdAt')
+      .andWhere('wallpaper.imageUrl like :condition', { condition: `%mobile%` })
+      .orderBy('wallpaper.createdAt', 'DESC')
+      .limit(1)
       .getRawMany();
 
     await sendTemplateToEmail({ users, wallpapers });

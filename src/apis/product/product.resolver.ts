@@ -94,8 +94,16 @@ export class ProductResolver {
     return await this.productService.findAll();
   }
 
+  /**
+   * Fetch all Products API
+   * @type [`Query`]
+   * @param keyword 검색어
+   * @returns 모든 상품의 정보
+   */
   @Query(() => [Product])
-  fetchProductsWithKeywrod(@Args('keyword') keyword: string) {
+  fetchProductsWithKeyword(
+    @Args('keyword') keyword: string, //
+  ) {
     return this.productService.findAllWithKeyword({ keyword });
   }
 }

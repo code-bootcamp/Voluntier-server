@@ -179,6 +179,11 @@ export class ProductService {
     return result;
   }
 
+  /**
+   * Find all Products with Keyword
+   * @param keyword 검색어
+   * @returns 모든 상품의 정보
+   */
   async findAllWithKeyword({ keyword }: { keyword: string }) {
     const result = await this.productRepository.find({
       relations: ['productImage'],

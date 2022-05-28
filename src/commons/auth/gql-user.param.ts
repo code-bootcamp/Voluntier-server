@@ -13,7 +13,7 @@ export interface ICurrentUser {
  * GraphQL Context
  */
 export const CurrentUser = createParamDecorator(
-  (data: any, context: ExecutionContext): ICurrentUser => {
+  (_, context: ExecutionContext): ICurrentUser => {
     const ctx = GqlExecutionContext.create(context);
     return ctx.getContext().req.user;
   },

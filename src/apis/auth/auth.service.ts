@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Request, Response } from 'express';
 import { ICurrentUser } from 'src/commons/auth/gql-user.param';
 import { Repository } from 'typeorm';
 import { PhoneToken } from '../phoneToken/entities/phoneToken.entity';
@@ -23,7 +24,15 @@ export class AuthService {
    * @param req Request
    * @param res Response
    */
-  setRefreshToken({ user, req, res }: { user: User; req: any; res: any }) {
+  setRefreshToken({
+    user,
+    req,
+    res,
+  }: {
+    user: User;
+    req: Request;
+    res: Response;
+  }) {
     const refreshToken = this.jwtService.sign(
       { email: user.email, sub: user.id }, //
       { secret: process.env.JWT_REFRESH_KEY, expiresIn: '1w' },
