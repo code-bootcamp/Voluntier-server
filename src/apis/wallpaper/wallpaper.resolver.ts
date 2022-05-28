@@ -38,6 +38,16 @@ export class WallpaperResolver {
   }
 
   /**
+   * Fetch Last Wallpaper API
+   * @type [`Query`]
+   * @returns `Wallpaper`
+   */
+  @Query(() => Wallpaper)
+  async fetchLastWallpaper() {
+    return await this.wallpaperService.findLastOne();
+  }
+
+  /**
    * Create Wallpaper API
    * @type [`Mutation`]
    * @param title title of Wallpaper

@@ -1,6 +1,6 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { Wallpaper } from './entities/wallpaper.entity';
 
 /**
@@ -32,6 +32,23 @@ export class WallpaperService {
    */
   async findAll() {
     const result = await this.wallpaperRepository.find();
+
+    return result;
+  }
+
+  /**
+   * Find Last Wallpaper
+   * @returns `Wallpaper`
+   */
+  async findLastOne() {
+    const result = await getRepository(Wallpaper)
+      .createQueryBuilder('wallpaper')
+      .where('wallpaper.imageUrl not like :condition', {
+        condition: `%mobile%`,
+      })
+      .orderBy('wallpaper.createdAt', 'DESC')
+      .limit(1)
+      .getOne();
 
     return result;
   }

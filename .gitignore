@@ -39,5 +39,3 @@ lerna-debug.log*
 frontend
 gcp-storage.json
 index.html
-vscode_live_server.cert.pem
-vscode_live_server.key.pem

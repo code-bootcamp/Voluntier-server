@@ -80,7 +80,7 @@ export class ProductResolver {
   }
 
   @Query(() => [Product])
-  fetchProductsWithKeywrod(@Args('keyword') keyword: string) {
+  fetchProductsWithKeyword(@Args('keyword') keyword: string) {
     return this.productService.findAllWithKeyword({ keyword });
   }
 }
