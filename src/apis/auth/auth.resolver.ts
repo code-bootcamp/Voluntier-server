@@ -41,12 +41,13 @@ export class AuthResolver {
    * @type [`Mutation`]
    * @param email User Email(ex. `aaaaa@gmail.com`)
    * @param password User Password
+   * @returns Access Token
    */
   @Mutation(() => String)
   async login(
     @Args('email') email: string, //
     @Args('password') password: string,
-    @Context() context: any,
+    @Context() context,
   ) {
     const user = await this.userService.findOneByEmail({
       email,
@@ -63,25 +64,24 @@ export class AuthResolver {
       throw new UnprocessableEntityException('암호가 틀렸습니다!');
     }
 
-    // Set Refresh Token
     this.authService.setRefreshToken({
       user,
       req: context.req,
       res: context.res,
     });
 
-    // Return Access Token
     return this.authService.getAccessToken({ user });
   }
 
   /**
    * Logout API
    * @type [`Mutation`]
+   * @returns result string
    */
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => String)
   async logout(
-    @Context() context: any, //
+    @Context() context, //
   ) {
     const accessToken = context.req.headers.authorization.split(' ')[1];
     const refreshToken = context.req.headers.cookie.replace(
@@ -117,6 +117,7 @@ export class AuthResolver {
   /**
    * Restore Access Token API
    * @type [`Mutation`]
+   * @returns Access Token
    */
   @UseGuards(GqlAuthRefreshGuard)
   @Mutation(() => String)
@@ -164,6 +165,7 @@ export class AuthResolver {
    * @type [`Mutation`]
    * @param phone User Phone(ex. `01011112222`)
    * @param token Token(ex. `123456`)
+   * @returns result string
    */
   @Mutation(() => String)
   async checkPhoneAuthToken(

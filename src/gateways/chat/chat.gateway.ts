@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
-  ConnectedSocket,
+  // ConnectedSocket,
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
@@ -35,7 +35,10 @@ export class ChatGateway {
   server;
 
   @SubscribeMessage('send')
-  async sendMessage(@MessageBody() data: string, @ConnectedSocket() client) {
+  async sendMessage(
+    @MessageBody() data: string, //
+    // @ConnectedSocket() client,
+  ) {
     const [room, nickname, message, userId] = data;
 
     const filteredMessage = message.replace(re, '**');

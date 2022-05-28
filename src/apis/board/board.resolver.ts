@@ -130,8 +130,29 @@ export class BoardResolver {
       });
     }
 
+    interface IBoard {
+      id: string;
+      userid: string;
+      username: string;
+      title: string;
+      contents: string;
+      centername: string;
+      centerownername: string;
+      centerphone: string;
+      recruitcount: number;
+      servicetime: number;
+      servicedate: number;
+      address: string;
+      addressdetail: string;
+      location1: string;
+      location2: string;
+      createdat: number;
+      updatedat: number;
+      deletedat: number;
+    }
+
     try {
-      const boards = await this.elasticsearchService.search<any>({
+      const boards = await this.elasticsearchService.search<IBoard>({
         index: 'board',
         query: {
           bool: {
@@ -172,7 +193,7 @@ export class BoardResolver {
           createdAt: new Date(board.createdat * 1000 + 9 * 60 * 60 * 1000),
           updatedAt: new Date(board.updatedat * 1000 + 9 * 60 * 60 * 1000),
           deletedAt:
-            board.delatedat === undefined
+            board.deletedat === undefined
               ? null
               : new Date(board.deletedat * 1000 + 9 * 60 * 60 * 1000),
         };

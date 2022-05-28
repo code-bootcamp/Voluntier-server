@@ -138,6 +138,11 @@ export class ProductService {
     return result;
   }
 
+  /**
+   * Find all Products with Keyword
+   * @param keyword 검색어
+   * @returns 모든 상품의 정보
+   */
   async findAllWithKeyword({ keyword }: { keyword: string }) {
     const result = await this.productRepository.find({
       relations: ['productImage'],
@@ -147,7 +152,7 @@ export class ProductService {
     });
     return result;
   }
-  
+
   /**
    * Find one Product
    * @param productId 정보를 가져오고 싶은 상품의 ID
