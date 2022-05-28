@@ -1,4 +1,7 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GqlAuthAccessGuard } from 'src/commons/auth/gql-auth.guard';
+import { CurrentUser, ICurrentUser } from 'src/commons/auth/gql-user.param';
 import { CreateProductInput } from './dto/createProduct.input';
 import { UpdateProductInput } from './dto/updateProduct.input';
 import { Product } from './entities/product.entity';
@@ -20,11 +23,16 @@ export class ProductResolver {
    * @param createProductInput 생성할 상품의 정보
    * @returns 생성된 상품의 정보
    */
+  @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Product)
   async createProduct(
     @Args('createProductInput') createProductInput: CreateProductInput,
+    @CurrentUser() currentUser: ICurrentUser,
   ) {
-    return await this.productService.create({ createProductInput });
+    return await this.productService.create({
+      createProductInput,
+      currentUser,
+    });
   }
 
   /**
@@ -33,9 +41,13 @@ export class ProductResolver {
    * @param productId 상품의 ID
    * @returns 삭제에 성공한경우 `true`, 삭제되지 않은 경우 `false`
    */
+  @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Boolean)
-  async deleteProduct(@Args('productId') productId: string) {
-    return await this.productService.delete({ productId });
+  async deleteProduct(
+    @Args('productId') productId: string,
+    @CurrentUser() currentUser: ICurrentUser,
+  ) {
+    return await this.productService.delete({ productId, currentUser });
   }
 
   /**
@@ -45,14 +57,17 @@ export class ProductResolver {
    * @param updateProductInput 수정할 상품의 정보
    * @returns 수정된 상품의 정보
    */
+  @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Product)
   async updateProduct(
     @Args('productId') productId: string,
     @Args('updateProductInput') updateProductInput: UpdateProductInput,
+    @CurrentUser() currentUser: ICurrentUser,
   ) {
     return await this.productService.update({
       productId,
       updateProductInput,
+      currentUser,
     });
   }
 

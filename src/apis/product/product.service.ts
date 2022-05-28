@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ICurrentUser } from 'src/commons/auth/gql-user.param';
 import { Like, Repository } from 'typeorm';
 import { ProductImage } from '../productImage/entities/productImage.entity';
+import { User } from '../user/entities/user.entity';
 import { CreateProductInput } from './dto/createProduct.input';
 import { UpdateProductInput } from './dto/updateProduct.input';
 import { Product } from './entities/product.entity';
@@ -17,6 +19,9 @@ export class ProductService {
 
     @InjectRepository(ProductImage)
     private readonly productImageRepository: Repository<ProductImage>,
+
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   /**
@@ -26,9 +31,20 @@ export class ProductService {
    */
   async create({
     createProductInput,
+    currentUser,
   }: {
     createProductInput: CreateProductInput;
+    currentUser: ICurrentUser;
   }) {
+    const userInfo = await this.userRepository.findOne({
+      id: currentUser.id,
+    });
+
+    if (!userInfo.isAdmin)
+      throw new UnprocessableEntityException(
+        '운영자가 아니면 상품작성을 할 수 없습니다.',
+      );
+
     const { ...product } = createProductInput;
 
     const savedProduct = await this.productRepository.save({
@@ -57,7 +73,21 @@ export class ProductService {
    * @param productId 삭제할 상품의 ID
    * @returns delete result(`true`, `false`)
    */
-  async delete({ productId }: { productId: string }) {
+  async delete({
+    productId,
+    currentUser,
+  }: {
+    productId: string;
+    currentUser: ICurrentUser;
+  }) {
+    const userInfo = await this.userRepository.findOne({
+      id: currentUser.id,
+    });
+
+    if (!userInfo.isAdmin)
+      throw new UnprocessableEntityException(
+        '운영자가 아니면 상품 삭제를 할 수 없습니다.',
+      );
     // 상품id를받아서 논리삭제 진행.
     const result = await this.productRepository.softDelete({
       id: productId,
@@ -75,10 +105,21 @@ export class ProductService {
   async update({
     productId,
     updateProductInput,
+    currentUser,
   }: {
     productId: string;
     updateProductInput: UpdateProductInput;
+    currentUser: ICurrentUser;
   }) {
+    const userInfo = await this.userRepository.findOne({
+      id: currentUser.id,
+    });
+
+    if (!userInfo.isAdmin)
+      throw new UnprocessableEntityException(
+        '운영자가 아니면 상품 수정을 할 수 없습니다.',
+      );
+
     const imageList = updateProductInput.imageUrls;
     const product = await this.productRepository.findOne({
       id: productId,
@@ -147,7 +188,7 @@ export class ProductService {
     });
     return result;
   }
-  
+
   /**
    * Find one Product
    * @param productId 정보를 가져오고 싶은 상품의 ID
