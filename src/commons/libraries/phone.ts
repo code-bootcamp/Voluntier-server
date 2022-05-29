@@ -1,5 +1,10 @@
 import axios from 'axios';
 
+/**
+ * Check if phone number is valid
+ * @param myPhone phone number
+ * @returns result(`true`, `false`)
+ */
 export function checkValidationPhone(myPhone: string) {
   if (myPhone.length !== 10 && myPhone.length !== 11) {
     return false;
@@ -8,6 +13,10 @@ export function checkValidationPhone(myPhone: string) {
   }
 }
 
+/**
+ * Get phone Token
+ * @returns Token result
+ */
 export function getToken() {
   const myCount = 6;
 
@@ -18,6 +27,11 @@ export function getToken() {
   return result;
 }
 
+/**
+ * Send Token SMS
+ * @param myPhone phone number
+ * @param myToken Token
+ */
 export async function sendTokenToSMS(myPhone: string, myToken: string) {
   const appKey = process.env.SMS_APP_KEY;
   const XSecretKey = process.env.SMS_X_SECRET_KEY;

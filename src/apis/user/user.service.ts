@@ -216,7 +216,7 @@ export class UserService {
       .groupBy('user.id')
       .getRawMany();
 
-    const wallpapers = await getRepository(Wallpaper)
+    const wallpapers: Wallpaper[] = await getRepository(Wallpaper)
       .createQueryBuilder('wallpaper')
       .select('wallpaper.imageUrl AS imageUrl')
       .where(
