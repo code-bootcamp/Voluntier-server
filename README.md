@@ -1,5 +1,5 @@
 <p align="center"> 
-  <a href="https://voluntier.site/" target="blank"><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/769e9ce2-dec5-4242-afca-e1f1e0512987/Logo_-1.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220527%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220527T033320Z&X-Amz-Expires=86400&X-Amz-Signature=6cc4bc0d0ac75ac3a0067c2d4a5eca108163df225e5d08bda65a1771a05e5e6e&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Logo_-1.png%22&x-id=GetObject" width="320" alt="Nest Logo" /></a>
+  <a href="https://voluntier.site/" target="blank"><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/769e9ce2-dec5-4242-afca-e1f1e0512987/Logo_-1.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220528%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220528T060041Z&X-Amz-Expires=86400&X-Amz-Signature=28f2789b749edb007bbc935743bb06757b30cf18f3c962f16c74c5036e9c3bab&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Logo_-1.png%22&x-id=GetObject" width="320" alt="Nest Logo" /></a>
 </p>
 
 # Voluntier
@@ -51,7 +51,170 @@
 
 # ERD
 
-<a><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f05fddba-cbdb-4de1-a6e9-a40ddf0741f7/Voluntier_ERD.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220527%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220527T053528Z&X-Amz-Expires=86400&X-Amz-Signature=ff1855a30017ea7604ecf0848ba6a6d6473b5b43adb20701a96c376e80cdf692&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Voluntier%2520ERD.png%22&x-id=GetObject" width="720" /></a>
+<a><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f05fddba-cbdb-4de1-a6e9-a40ddf0741f7/Voluntier_ERD.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220527%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220527T053528Z&X-Amz-Expires=86400&X-Amz-Signature=ff1855a30017ea7604ecf0848ba6a6d6473b5b43adb20701a96c376e80cdf692&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Voluntier%2520ERD.png%22&x-id=GetObject" width="100%" /></a>
+
+# API
+
+<a><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/9e9916da-b4d8-4f58-b743-5925926e9660/0001.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220528%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220528T060958Z&X-Amz-Expires=86400&X-Amz-Signature=d14a42a2c1201676731005bfcb48d5030269971a4a34649b5390c94b48059eff&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%220001.jpg%22&x-id=GetObject" width="720" /></a>
+<a><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f440ab88-d251-45eb-a597-d08615339aad/0002.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220528%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220528T061008Z&X-Amz-Expires=86400&X-Amz-Signature=f0978e7640b0dad8ca61e05c0407bda066bb5f50505684701d2130e5f25d8670&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%220002.jpg%22&x-id=GetObject" width="720" /></a>
+
+# 서버 폴더구조
+
+```
+├── Dockerfile
+├── README.md
+├── docker-compose.prod.yaml
+├── docker-compose.prod2.yaml
+├── docker-compose.yaml
+├── elk
+│ └── logstash
+│       ├── logstash.conf
+│       ├── logstash.prod.conf
+│       ├── mysql-connector-java-8.0.28.jar
+│       └── post_template.json
+├── gcp-storage.json
+├── nest-cli.json
+├── package-lock.json
+├── package.json
+├── src
+│   ├── apis
+│   │   ├── auth
+│   │   │   ├── auth.controller.ts
+│   │   │   ├── auth.module.ts
+│   │   │   ├── auth.resolver.ts
+│   │   │   └── auth.service.ts
+│   │   ├── board
+│   │   │   ├── board.module.ts
+│   │   │   ├── board.resolver.ts
+│   │   │   ├── board.service.ts
+│   │   │   ├── dto
+│   │   │   │   ├── createBoard.input.ts
+│   │   │   │   └── updateBoard.input.ts
+│   │   │   └── entities
+│   │   │       └── board.entity.ts
+│   │   ├── boardImage
+│   │   │   └── entities
+│   │   │       └── boardImage.entity.ts
+│   │   ├── captcha
+│   │   │   ├── captcha.controller.ts
+│   │   │   └── captcha.module.ts
+│   │   ├── chatHistory
+│   │   │   ├── chatHistory.module.ts
+│   │   │   ├── chatHistory.resolver.ts
+│   │   │   ├── chatHistory.service.ts
+│   │   │   └── entities
+│   │   │       └── chatHistory.entity.ts
+│   │   ├── dibs
+│   │   │   ├── dibs.module.ts
+│   │   │   ├── dibs.resolver.ts
+│   │   │   ├── dibs.service.ts
+│   │   │   └── entity
+│   │   │       └── dibs.entity.ts
+│   │   ├── donation
+│   │   │   ├── donation.module.ts
+│   │   │   ├── donation.resolver.ts
+│   │   │   ├── donation.service.ts
+│   │   │   └── entities
+│   │   │       └── donation.entity.ts
+│   │   ├── enroll
+│   │   │   ├── enroll.module.ts
+│   │   │   ├── enroll.resolver.ts
+│   │   │   ├── enroll.service.ts
+│   │   │   └── entities
+│   │   │       └── enroll.entity.ts
+│   │   ├── iamport
+│   │   │   └── iamport.service.ts
+│   │   ├── image
+│   │   │   ├── image.module.ts
+│   │   │   ├── image.resolver.ts
+│   │   │   └── image.service.ts
+│   │   ├── phoneToken
+│   │   │   └── entities
+│   │   │       └── phoneToken.entity.ts
+│   │   ├── product
+│   │   │   ├── dto
+│   │   │   │   ├── createProduct.input.ts
+│   │   │   │   └── updateProduct.input.ts
+│   │   │   ├── entities
+│   │   │   │   └── product.entity.ts
+│   │   │   ├── product.module.ts
+│   │   │   ├── product.resolver.ts
+│   │   │   └── product.service.ts
+│   │   ├── productImage
+│   │   │   ├── dto
+│   │   │   │   ├── createProductImage.input.ts
+│   │   │   │   └── updateProductImage.input.ts
+│   │   │   ├── entities
+│   │   │   │   └── productImage.entity.ts
+│   │   │   ├── productImage.module.ts
+│   │   │   ├── productImage.resolver.ts
+│   │   │   └── productImage.service.ts
+│   │   ├── purchase
+│   │   │   ├── dto
+│   │   │   │   └── createPurchase.input.ts
+│   │   │   ├── entities
+│   │   │   │   └── purchase.entity.ts
+│   │   │   ├── purchase.module.ts
+│   │   │   ├── purchase.resolver.ts
+│   │   │   └── purchase.service.ts
+│   │   ├── user
+│   │   │   ├── dto
+│   │   │   │   ├── createUser.input.ts
+│   │   │   │   └── updateUser.input.ts
+│   │   │   ├── entities
+│   │   │   │   └── user.entity.ts
+│   │   │   ├── user.module.ts
+│   │   │   ├── user.resolver.ts
+│   │   │   └── user.service.ts
+│   │   └── wallpaper
+│   │       ├── entities
+│   │       │   └── wallpaper.entity.ts
+│   │       ├── wallpaper.module.ts
+│   │       ├── wallpaper.resolver.ts
+│   │       └── wallpaper.service.ts
+│   ├── app.controller.spec.ts
+│   ├── app.controller.ts
+│   ├── app.module.ts
+│   ├── app.service.ts
+│   ├── commons
+│   │   ├── auth
+│   │   │   ├── gql-auth.guard.ts
+│   │   │   ├── gql-user.param.ts
+│   │   │   ├── jwt-access.strategy.ts
+│   │   │   ├── jwt-refresh.strategy.ts
+│   │   │   ├── jwt-social-google.strategy.ts
+│   │   │   ├── jwt-social-kakao.strategy.ts
+│   │   │   └── jwt-social-naver.strategy.ts
+│   │   ├── filter
+│   │   │   └── http-exception.filter.ts
+│   │   ├── graphql
+│   │   │   └── schema.gql
+│   │   └── libraries
+│   │       ├── email.ts
+│   │       └── phone.ts
+│   ├── gateways
+│   │   └── chat
+│   │       ├── chat.gateway.ts
+│   │       ├── chat.module.ts
+│   │       ├── chat.service.ts
+│   │       └── list.txt
+│   └── main.ts
+├── test
+│   ├── app.e2e-spec.ts
+│   └── jest-e2e.json
+├── tsconfig.build.json
+├── tsconfig.json
+└── yarn.lock
+```
+
+# 주요 기능
+
+# 프로젝트 설치 압법 \* 실행 방법
+
+```
+git clone https://github.com/code-bootcamp/f6b2-team3-server.git
+yarn install
+```
 
 # .env
 
@@ -74,4 +237,5 @@
 > Elasticsearch ELASTICSEARCH_URL
 
 > 소셜로그인 가입시 디폴트 정보  
-> DEFAULT_NAME=defaultName, DEFAULT_EMAIL=defaultEmail, DEFAULT_PHONE=01000000000, DEFAULT_PASSWORD=43jfj9!8f34^j798f\*4398kd
+> DEFAULT_NAME, DEFAULT_EMAIL, DEFAULT_PHONE, DEFAULT_PASSWORD
+
