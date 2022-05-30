@@ -83,13 +83,13 @@ export class AuthResolver {
   async logout(
     @Context() context, //
   ) {
-    const accessToken = context.req.headers.authorization.split(' ')[1];
-    const refreshToken = context.req.headers.cookie.replace(
-      'refreshToken=',
-      '',
-    );
-
     try {
+      const accessToken = context.req.headers.authorization.split(' ')[1];
+      const refreshToken = context.req.headers.cookie.replace(
+        'refreshToken=',
+        '',
+      );
+
       const verifyAccess = jwt.verify(accessToken, process.env.JWT_ACCESS_KEY);
       const verifyRefresh = jwt.verify(
         refreshToken,

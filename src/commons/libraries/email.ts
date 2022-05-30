@@ -1,5 +1,17 @@
 import axios from 'axios';
+import { Wallpaper } from 'src/apis/wallpaper/entities/wallpaper.entity';
 
+/**
+ * Make Mail Template
+ * @param name name of User
+ * @param lastMonth last month
+ * @param year this year
+ * @param month this month
+ * @param day today
+ * @param amount amount of donation in last month
+ * @param imgList attach image list
+ * @returns template result
+ */
 export function getTemplate({
   name,
   lastMonth,
@@ -2309,7 +2321,27 @@ export function getTemplate({
   `;
 }
 
-export async function sendTemplateToEmail({ users, wallpapers }) {
+/**
+ * Send Mail
+ * @param users User list
+ * @param wallpapers wallpapers to be attached
+ */
+export async function sendTemplateToEmail({
+  users,
+  wallpapers,
+}: {
+  users: {
+    userId: string;
+    name: string;
+    email: string;
+    lastMonth: number;
+    year: number;
+    month: number;
+    day: number;
+    amount: number;
+  }[];
+  wallpapers: Wallpaper[];
+}) {
   const appKey = process.env.MAIL_APP_KEY;
   const XSecretKey = process.env.MAIL_X_SECRET_KEY;
   const sender = process.env.MAIL_SENDER;
