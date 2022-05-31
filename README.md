@@ -1,5 +1,5 @@
 <p align="center"> 
-  <a href="https://voluntier.site/" target="blank"><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/769e9ce2-dec5-4242-afca-e1f1e0512987/Logo_-1.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220528%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220528T060041Z&X-Amz-Expires=86400&X-Amz-Signature=28f2789b749edb007bbc935743bb06757b30cf18f3c962f16c74c5036e9c3bab&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Logo_-1.png%22&x-id=GetObject" width="320" alt="Nest Logo" /></a>
+  <a href="https://voluntier.site/" target="blank"><img src="https://user-images.githubusercontent.com/57056277/170965685-c57c5bae-822e-46ad-8436-912c0c10dbf5.png" width="320" alt="Nest Logo" /></a>
 </p>
 
 # Voluntier
@@ -9,7 +9,7 @@
 
 # 팀원 소개
 
-<a><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/626e786b-8fce-4ce9-bcb5-94e629e5b648/3%E1%84%90%E1%85%B5%E1%86%B7.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220527%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220527T084240Z&X-Amz-Expires=86400&X-Amz-Signature=b320e6f3c5ea09c67b7e9debb71732e1e3aa8ebae1cf13462279fe53df96597f&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%223%25E1%2584%2590%25E1%2585%25B5%25E1%2586%25B7.jpg%22&x-id=GetObject" width="100%" /></a>
+<a><img src="https://user-images.githubusercontent.com/57056277/170965651-7b67a438-657a-4353-9903-8b3983c7eaeb.jpg" width="100%" /></a>
 
 | 이름       | 역할             | 담당 부분                                            |
 | ---------- | ---------------- | ---------------------------------------------------- |
@@ -43,20 +43,20 @@
 
 # Flow Chart
 
-<a><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/e93ee811-7237-4eb7-b907-99158a35f87e/Flow-Chart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220527%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220527T084645Z&X-Amz-Expires=86400&X-Amz-Signature=43ca15173765ab8b5e07b72925168e2181d97f65ede278678e909b3eb939574c&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Flow-Chart.png%22&x-id=GetObject" width="720" /></a>
+<a><img src="https://user-images.githubusercontent.com/57056277/170966595-c2b49bff-1374-49b9-910f-6c0d5c2cadf4.jpg" width="720" /></a>
 
-<a><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7039faf6-6ce6-402b-896e-6b40ada725e6/DataFlow.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220527%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220527T054227Z&X-Amz-Expires=86400&X-Amz-Signature=1fdfe71d7f8a60ef5815844783f438e6b66c6a237612fb4c74e083fe61869d99&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22DataFlow.jpg%22&x-id=GetObject" width="720" /></a>
+<a><img src="https://user-images.githubusercontent.com/57056277/170966843-f8ef36ab-08bd-4124-9056-de5d8d41e956.png" width="720" /></a>
 
-<a><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/081f4e99-e50a-4d8f-920c-07f2c8774032/System_Config.drawio.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220527%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220527T054326Z&X-Amz-Expires=86400&X-Amz-Signature=c4472003aebcc162955c84b6ba05902bad68a3f9d2ef80aec340e62ea1d6eaa7&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22System_Config.drawio.png%22&x-id=GetObject" width="480" /></a>
+<a><img src="https://user-images.githubusercontent.com/57056277/170966981-95500cf4-81bb-4592-b383-baedad11763f.png" width="480" /></a>
 
 # ERD
 
-<a><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f05fddba-cbdb-4de1-a6e9-a40ddf0741f7/Voluntier_ERD.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220527%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220527T053528Z&X-Amz-Expires=86400&X-Amz-Signature=ff1855a30017ea7604ecf0848ba6a6d6473b5b43adb20701a96c376e80cdf692&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Voluntier%2520ERD.png%22&x-id=GetObject" width="100%" /></a>
+<a><img src="https://user-images.githubusercontent.com/57056277/170967148-9718566c-cf10-4302-be0d-c5753be60f0d.png" width="100%" /></a>
 
 # API
 
-<a><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/9e9916da-b4d8-4f58-b743-5925926e9660/0001.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220528%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220528T060958Z&X-Amz-Expires=86400&X-Amz-Signature=d14a42a2c1201676731005bfcb48d5030269971a4a34649b5390c94b48059eff&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%220001.jpg%22&x-id=GetObject" width="720" /></a>
-<a><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f440ab88-d251-45eb-a597-d08615339aad/0002.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220528%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220528T061008Z&X-Amz-Expires=86400&X-Amz-Signature=f0978e7640b0dad8ca61e05c0407bda066bb5f50505684701d2130e5f25d8670&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%220002.jpg%22&x-id=GetObject" width="720" /></a>
+<a><img src="https://user-images.githubusercontent.com/57056277/170967455-5983c18c-d979-4cbc-b7c7-b5a4eeddc0e6.jpg" width="720" /></a>
+<a><img src="https://user-images.githubusercontent.com/57056277/170967489-3d30b4b5-344f-45ac-be7e-dadd2ecb8acb.jpg" width="720" /></a>
 
 # 서버 폴더구조
 
@@ -209,7 +209,7 @@
 
 # 주요 기능
 
-# 프로젝트 설치 압법 \* 실행 방법
+# 프로젝트 설치 방법, 실행 방법
 
 ```
 git clone https://github.com/code-bootcamp/f6b2-team3-server.git
@@ -238,4 +238,3 @@ yarn install
 
 > 소셜로그인 가입시 디폴트 정보  
 > DEFAULT_NAME, DEFAULT_EMAIL, DEFAULT_PHONE, DEFAULT_PASSWORD
-
