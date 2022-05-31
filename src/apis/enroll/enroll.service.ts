@@ -48,6 +48,7 @@ export class EnrollService {
         },
       },
       relations: ['board'],
+      withDeleted: true,
     });
   }
 

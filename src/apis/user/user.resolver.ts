@@ -126,8 +126,7 @@ export class UserResolver {
    * @returns result string
    */
   @Mutation(() => String)
-  // @Cron('* * * * *') // Execute every minute
-  // @Cron('00 06 1 * *') // Execute every month 1st day 06:00
+  @Cron('00 06 1 * *') // Execute every month 1st day 06:00
   async sendThanksMailTest() {
     return await this.userService.sendRegularEmail();
   }

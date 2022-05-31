@@ -1,6 +1,7 @@
 import { Storage } from '@google-cloud/storage';
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
+import { v4 } from 'uuid';
 
 interface IUpload {
   file: FileUpload;
@@ -28,11 +29,14 @@ export class ImageService {
     }
 
     const url: string = await new Promise((resolve, reject) => {
+      const uuid = v4();
+      const fileType = file.filename.split('.').pop();
+
       file
         .createReadStream()
-        .pipe(storage.file(file.filename).createWriteStream())
+        .pipe(storage.file(`${uuid}.${fileType}`).createWriteStream())
         .on('finish', () =>
-          resolve(`${process.env.STORAGE_BUCKET}/${file.filename}`),
+          resolve(`${process.env.STORAGE_BUCKET}/${uuid}.${fileType}`),
         )
         .on('error', (error) => reject(error));
     });
