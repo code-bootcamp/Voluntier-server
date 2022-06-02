@@ -1,0 +1,275 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: String!
+  name: String!
+  email: String!
+  phone: String
+  profileImageUrl: String
+  donationAmount: Int!
+  point: Int!
+  serviceTime: Int!
+  isAdmin: Boolean!
+  provider: String!
+  createdAt: DateTime!
+  deletedAt: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Donation {
+  id: String!
+  user: User!
+  impUid: String!
+  amount: Int!
+  status: POINT_TRANSACTION_STATUS_ENUM!
+  createdAt: DateTime!
+  cancelledAt: DateTime!
+}
+
+enum POINT_TRANSACTION_STATUS_ENUM {
+  PAYMENT
+  CANCEL
+}
+
+type Wallpaper {
+  id: String!
+  title: String!
+  imageUrl: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
+type Board {
+  id: String!
+  user: User!
+  title: String!
+  contents: String!
+  centerName: String!
+  centerOwnerName: String!
+  centerPhone: String!
+  recruitCount: Int!
+  serviceTime: Int!
+  serviceDate: DateTime!
+  address: String!
+  addressDetail: String!
+  location1: String!
+  location2: String!
+  boardImage: [BoardImage!]
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+type BoardImage {
+  id: String!
+  board: Board!
+  imageUrl: String!
+}
+
+type Enroll {
+  id: String!
+  user: User!
+  board: Board!
+  status: ENROLL_STATUS_ENUM!
+  createdAt: DateTime!
+  deletedAt: DateTime!
+}
+
+enum ENROLL_STATUS_ENUM {
+  ENROLL
+  COMPLETE
+}
+
+type Product {
+  id: String!
+  name: String!
+  price: Int!
+  details: String!
+  createdAt: DateTime!
+  productImage: [ProductImage!]!
+}
+
+type ProductImage {
+  id: String!
+  product: Product!
+  imageUrl: String!
+}
+
+type Purchase {
+  id: String!
+  user: User!
+  product: Product!
+  receiverName: String!
+  receiverPhone: String!
+  address: String!
+  addressDetail: String!
+  invoiceNo: String!
+  itemCount: Int!
+  usedPoint: Int!
+  createdAt: DateTime!
+  cancelledAt: DateTime
+}
+
+type ChatHistory {
+  id: String!
+  user: User!
+  message: String!
+  createdAt: DateTime!
+  board: Board!
+}
+
+type Dibs {
+  id: String!
+  user: User!
+  product: Product!
+}
+
+type Query {
+  fetchBoard(boardId: String!): Board!
+  fetchBoards(search: String, location1: String, location2: String, page: Int = 1): [Board!]!
+  fetchBoardsAll: [Board!]!
+  fetchBoardsOfUser: [Board!]!
+  fetchBoardsNearDeadline(location1: String, location2: String): [Board!]!
+  fetchBoardsCount(search: String, location1: String, location2: String): Int!
+  fetchChatHistory(boardId: String!): [ChatHistory!]!
+  fetchLogInUserDibs: [Dibs!]!
+  fetchDonationAmount: Int!
+  fetchDonations: [Donation!]!
+  fetchAllUsersDonationsAmount: Int!
+  fetchEnrollsByBoardId(boardId: String!): [Enroll!]!
+  fetchEnrollsByUserId: [Enroll!]!
+  fetchProduct(productId: String!): Product!
+  fetchProducts: [Product!]!
+  fetchProductsWithKeyword(keyword: String!): [Product!]!
+  fetchProductImage(productId: String!): ProductImage!
+  fetchProductImages(productId: String!): [ProductImage!]!
+  fetchPurchases: [Purchase!]!
+  fetchLoginUser: User!
+  fetchWallpaper(wallpaperId: String!): Wallpaper!
+  fetchWallpapers: [Wallpaper!]!
+  fetchLastWallpaper: Wallpaper!
+}
+
+type Mutation {
+  login(email: String!, password: String!): String!
+  logout: String!
+  restoreAccessToken: String!
+  sendPhoneAuthToken(phone: String!): String!
+  checkPhoneAuthToken(phone: String!, token: String!): String!
+  createBoard(createBoardInput: CreateBoardInput!): Board!
+  updateBoard(boardId: String!, updateBoardInput: UpdateBoardInput!): Board!
+  deleteBoard(boardId: String!): Boolean!
+  createDibs(productId: String!): Dibs!
+  deleteDibs(productId: String!): Boolean!
+  createDonation(impUid: String!, amount: Float!): Donation!
+  cancelDonation(impUid: String!): Donation!
+  createEnroll(boardId: String!): Enroll!
+  updateEnroll(boardId: String!, enrollId: String!): Enroll!
+  deleteEnroll(boardId: String!, enrollId: String!): Boolean!
+  uploadImage(file: Upload!): String!
+  createProduct(createProductInput: CreateProductInput!): Product!
+  deleteProduct(productId: String!): Boolean!
+  updateProduct(productId: String!, updateProductInput: UpdateProductInput!): Product!
+  createProductImage(createProductImageInput: CreateProductImageInput!): ProductImage!
+  updateProductImage(updateProductImageInput: UpdateProductImageInput!): [ProductImage!]!
+  deleteProductImage(productImageId: String!): Boolean!
+  createPurchase(createPurchaseInput: CreatePurchaseInput!): Purchase!
+  cancelPurchase(purchaseId: String!): Purchase!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  updateUserImage(profileImageUrl: String!): User!
+  deleteUser(userId: String!): Boolean!
+  sendThanksMailTest: String!
+  resetPassword(phone: String!, email: String!, password: String!): String!
+  createWallpaper(title: String!, imageUrl: String!): Wallpaper!
+  updateWallpaper(wallpaperId: String!, title: String!, imageUrl: String!): Wallpaper!
+  deleteWallpaper(wallpaperId: String!): Boolean!
+}
+
+input CreateBoardInput {
+  title: String!
+  contents: String!
+  centerName: String!
+  centerOwnerName: String!
+  centerPhone: String!
+  recruitCount: Int
+  serviceTime: Int!
+  serviceDate: DateTime!
+  address: String!
+  addressDetail: String!
+  location1: String!
+  location2: String!
+  urls: [String!]
+}
+
+input UpdateBoardInput {
+  title: String
+  contents: String
+  centerName: String
+  centerOwnerName: String
+  centerPhone: String
+  recruitCount: Int
+  serviceTime: Int
+  serviceDate: DateTime
+  address: String
+  addressDetail: String
+  location1: String
+  location2: String
+  urls: [String!]
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input CreateProductInput {
+  name: String!
+  price: Int!
+  details: String!
+  imageUrls: [String!]!
+}
+
+input UpdateProductInput {
+  name: String
+  price: Int
+  details: String
+  imageUrls: [String!]
+}
+
+input CreateProductImageInput {
+  productId: String!
+  imageUrl: String!
+}
+
+input UpdateProductImageInput {
+  productId: String!
+  imageUrl: [String!]!
+}
+
+input CreatePurchaseInput {
+  userId: String!
+  productId: String!
+  receiverName: String!
+  receiverPhone: String!
+  address: String!
+  addressDetail: String!
+  itemCount: Int!
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  password: String!
+  phone: String!
+}
+
+input UpdateUserInput {
+  name: String!
+  password: String!
+}
